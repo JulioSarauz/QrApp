@@ -32,7 +32,6 @@
     "@techiediaries/ngx-qrcode": "^9.1.0",
     "angular2-qrcode": "^2.0.3",
     "angularx-qrcode": "^19.0.0",
-    "cordova-plugin-admob-free": "^0.27.0",
     "ionicons": "^7.0.0",
     "ngx-qrcode": "^0.1.0-rc.1",
     "qrcode": "^1.5.4",
