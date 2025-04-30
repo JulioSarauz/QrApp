@@ -1,28 +1,28 @@
 <ion-header>
-  <ion-toolbar>
-    <ion-title>QR Generator</ion-title>
+  <ion-toolbar color="light" class="toolbar-custom">
+    <ion-title class="titulo-centrado">QR Generador</ion-title>
   </ion-toolbar>
 </ion-header>
 
 <ion-content class="ion-padding">
 
-  <ion-item>
-    <ion-label position="floating">Pega un enlace</ion-label>
-    <ion-input [(ngModel)]="qrData"></ion-input>
+  <ion-item style="--background: #f0f0f0;">
+    <ion-label position="floating" style="color: rgb(124, 9, 9);">Pega un enlace aquí</ion-label>
+    <ion-input [(ngModel)]="qrData" style="color: black;"></ion-input>
   </ion-item>
 
   <ion-item>
     <ion-label color="dark">Color</ion-label>
-    <ion-input type="color" [(ngModel)]="colorDark"></ion-input>
+    <ion-input type="color" [(ngModel)]="colorDark" style="max-width: 60px;"></ion-input>
     <ion-label color="medium">Fondo</ion-label>
-    <ion-input type="color" [(ngModel)]="colorLight"></ion-input>
+    <ion-input type="color" [(ngModel)]="colorLight" style="max-width: 60px;"></ion-input>
   </ion-item>
 
   <ion-button expand="block" (click)="generateQR()">Generar QR</ion-button>
 
-  <div *ngIf="qrImage" ngClass="qr-generado">
-    <img [src]="qrImage" alt="QR Code" style="margin: 20px 0; max-width: 100%;" />
-    <ion-button expand="block" (click)="downloadQR()">Descargar QR</ion-button>
+  <div *ngIf="qrImage" class="qr-container" ngClass="qr-generado">
+    <img [src]="qrImage" alt="QR Code" class="qr-image" />
+    <ion-button expand="block" (click)="shareQR()">Compartir QR</ion-button>
   </div>
 
 </ion-content>
