@@ -34,3 +34,37 @@
 .swal2-container {
   z-index: 99999 !important;
 }
+
+.titulo-con-imagen {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+}
+
+.logo-titulo {
+  height: 30px;
+  width: auto;
+  margin-right: 10px;
+  border-radius: 5px;
+}
+
+.titulo-centrado {
+  color: white;
+  font-weight: bold;
+  text-shadow: 0 0 2px black;
+}
+
+.boton-generar {
+  height: 60px;
+  font-size: 18px;
+  border-radius: 12px;
+  background-color: #1b2236; /* azul vibrante */
+  color: #ffffff;            /* texto blanco */
+  --background: #1b2236;     /* también necesario para Ionic */
+  --color: #ffffff;
+}
+
+.imgqr{
+  width: 80%;
+}

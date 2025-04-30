@@ -35,23 +35,39 @@ export class HomePage {
     });
   }
 
-  generateQR() {
-    const options = {
-      color: {
-        dark: this.colorDark,
-        light: this.colorLight,
-      }
-    };
-    QRCode.toDataURL(this.qrData, options, (err, url) => {
-      if (err) {
-        console.error(err);
-        return;
-      }
-      this.qrImage = url;
-    });
+  async generateQR() {
+    try{
+      const options = {
+        color: {
+          dark: this.colorDark,
+          light: this.colorLight,
+        }
+      };
+      QRCode.toDataURL(this.qrData, options, async (err, url) => {
+        if (err) {
+          await Dialog.alert({
+            title: 'Error',
+            message: 'Ingrese un enlace válido',
+          });
+          return;
+        }
+        this.qrImage = url;
+      });
+    }catch(Err){
+      await Dialog.alert({
+        title: 'Error',
+        message: 'Verifique la información ingresada',
+      });
+    }
+   
   }
 
-  
+  limpiarCampos() {
+    this.qrData = '';
+    this.qrImage = '';
+    this.colorDark = '#000000';
+    this.colorLight = '#ffffff';
+  }
   async shareQR() {
     try {
       await AdMob.prepareInterstitial({
@@ -62,7 +78,6 @@ export class HomePage {
       // Esperar a que se cierre el anuncio antes de continuar
       const adClosed = new Promise<void>((resolve) => {
         (AdMob as any).addListener('interstitialAdDismissed', () => {
-          console.log('Anuncio intersticial cerrado');
           resolve();
         });
       });
@@ -87,7 +102,6 @@ export class HomePage {
       });
   
     } catch (error) {
-      console.error('Error al compartir QR:', error);
       await Dialog.alert({
         title: 'Error',
         message: 'No se pudo compartir el código QR.',
@@ -123,9 +137,7 @@ export class HomePage {
         title: 'Éxito',
         message: `Código QR guardado exitosamente.\n\nRuta:\n${result.uri}`,
       });
-      console.log('Guardado en:', result.uri);
     } catch (error) {
-      console.error('Error al guardar QR:', error);
       await Dialog.alert({
         title: 'Error',
         message: 'No se pudo guardar el código QR.',
@@ -141,7 +153,6 @@ export class HomePage {
     });
 
     (AdMob as any).addListener('interstitialAdDismissed', () => {
-      console.log('Anuncio intersticial cerrado');
     });
 
     await AdMob.showInterstitial();
