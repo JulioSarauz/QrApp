@@ -28,13 +28,12 @@ export class HomePage {
     await AdMob.initialize();
 
     await AdMob.showBanner({
-      adId: 'ca-app-pub-3940256099942544/6300978111',
+      adId: 'ca-app-pub-3168726036346781/9507429127',
       adSize: BannerAdSize.ADAPTIVE_BANNER,
       position: BannerAdPosition.BOTTOM_CENTER,
-      isTesting: true,
+      isTesting: false, // ⚠️ IMPORTANTE: Desactiva el modo test en producción
     });
   }
-
   async generateQR() {
     try{
       const options = {
@@ -148,9 +147,9 @@ export class HomePage {
   
   async showInterstitialAd() {
     await AdMob.prepareInterstitial({
-      adId: 'ca-app-pub-3940256099942544/1033173712', 
-      isTesting: true
-    });
+      adId: 'ca-app-pub-3168726036346781/9858782916',
+      isTesting: false,
+    });    
 
     (AdMob as any).addListener('interstitialAdDismissed', () => {
     });
