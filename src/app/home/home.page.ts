@@ -71,7 +71,7 @@ export class HomePage {
     try {
       await AdMob.prepareInterstitial({
         adId: 'ca-app-pub-3168726036346781/9858782916',
-        isTesting: true,
+        isTesting: false,
       });
   
       // Esperar a que se cierre el anuncio antes de continuar
