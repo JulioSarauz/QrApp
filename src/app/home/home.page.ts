@@ -70,7 +70,7 @@ export class HomePage {
   async shareQR() {
     try {
       await AdMob.prepareInterstitial({
-        adId: 'ca-app-pub-3940256099942544/1033173712',
+        adId: 'ca-app-pub-3168726036346781/9858782916',
         isTesting: true,
       });
   
