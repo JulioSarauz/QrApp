@@ -4,9 +4,6 @@ import { Filesystem, Directory } from '@capacitor/filesystem';
 import * as QRCode from 'qrcode';
 import { Dialog } from '@capacitor/dialog';
 import { Share } from '@capacitor/share';
-// <meta-data
-//       android:name="com.google.android.gms.ads.APPLICATION_ID"
-//       android:value="ca-app-pub-3940256099942544~3347511713"/>
 @Component({
   selector: 'app-home',
   templateUrl: 'home.page.html',
@@ -19,6 +16,7 @@ export class HomePage {
   qrImage: string = '';
   colorDark = '#000000';
   colorLight = '#ffffff';
+  ModoDesarrollo: boolean = false;
 
   constructor() {
     this.initializeAdMob();
@@ -31,34 +29,24 @@ export class HomePage {
       adId: 'ca-app-pub-3168726036346781/9507429127',
       adSize: BannerAdSize.ADAPTIVE_BANNER,
       position: BannerAdPosition.BOTTOM_CENTER,
-      isTesting: false, // ⚠️ IMPORTANTE: Desactiva el modo test en producción
+      isTesting: this.ModoDesarrollo, // ⚠️ IMPORTANTE: Desactiva el modo test en producción
     });
   }
   async generateQR() {
-    try{
+    try {
       const options = {
         color: {
           dark: this.colorDark,
           light: this.colorLight,
         }
       };
-      QRCode.toDataURL(this.qrData, options, async (err, url) => {
-        if (err) {
-          await Dialog.alert({
-            title: 'Error',
-            message: 'Ingrese un enlace válido',
-          });
-          return;
-        }
-        this.qrImage = url;
-      });
-    }catch(Err){
+      this.qrImage = await QRCode.toDataURL(this.qrData, options);
+    } catch (err) {
       await Dialog.alert({
         title: 'Error',
-        message: 'Verifique la información ingresada',
+        message: 'Ingrese un enlace válido',
       });
     }
-   
   }
 
   limpiarCampos() {
@@ -71,7 +59,7 @@ export class HomePage {
     try {
       await AdMob.prepareInterstitial({
         adId: 'ca-app-pub-3168726036346781/9858782916',
-        isTesting: false,
+        isTesting: this.ModoDesarrollo,
       });
   
       // Esperar a que se cierre el anuncio antes de continuar
@@ -95,16 +83,14 @@ export class HomePage {
   
       await Share.share({
         title: 'Mi Código QR',
-        text: 'Este es el código QR generado',
+        text: 'QR generado por QR generador...',
         url: savedFile.uri,
         dialogTitle: 'Compartir código QR con…',
       });
   
     } catch (error) {
-      await Dialog.alert({
-        title: 'Error',
-        message: 'No se pudo compartir el código QR.',
-      });
+      console.log(error);
+      
     }
   }
 
@@ -148,7 +134,7 @@ export class HomePage {
   async showInterstitialAd() {
     await AdMob.prepareInterstitial({
       adId: 'ca-app-pub-3168726036346781/9858782916',
-      isTesting: false,
+      isTesting: this.ModoDesarrollo,
     });    
 
     (AdMob as any).addListener('interstitialAdDismissed', () => {
