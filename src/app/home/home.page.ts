@@ -1,16 +1,19 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { AdMob, BannerAdPosition, BannerAdSize } from '@capacitor-community/admob';
 import { Filesystem, Directory } from '@capacitor/filesystem';
 import * as QRCode from 'qrcode';
 import { Dialog } from '@capacitor/dialog';
 import { Share } from '@capacitor/share';
+import { Platform } from '@ionic/angular';
+
+
 @Component({
   selector: 'app-home',
   templateUrl: 'home.page.html',
   styleUrls: ['home.page.scss'],
   standalone: false,
 })
-export class HomePage {
+export class HomePage  implements OnInit{
 
   qrData: string = '';
   qrImage: string = '';
@@ -18,19 +21,29 @@ export class HomePage {
   colorLight = '#ffffff';
   ModoDesarrollo: boolean = false;
 
-  constructor() {
-    this.initializeAdMob();
-  }
+  constructor(private platform: Platform) { }
 
-  async initializeAdMob() {
-    await AdMob.initialize();
-
-    await AdMob.showBanner({
-      adId: 'ca-app-pub-3168726036346781/9507429127',
-      adSize: BannerAdSize.ADAPTIVE_BANNER,
-      position: BannerAdPosition.BOTTOM_CENTER,
-      isTesting: this.ModoDesarrollo, // ⚠️ IMPORTANTE: Desactiva el modo test en producción
+  ngOnInit() {
+    this.platform.ready().then(() => {
+      this.initializeAdMob();
     });
+  }
+  async initializeAdMob() {
+    try {
+      const result = await AdMob.initialize();
+      console.log('AdMob initialized:', result);
+  
+      await AdMob.showBanner({
+        adId: 'ca-app-pub-3168726036346781/9507429127',
+        adSize: BannerAdSize.BANNER,  // cambiar a BANNER para probar
+        position: BannerAdPosition.BOTTOM_CENTER, // también probar TOP_CENTER
+        isTesting: true,
+      });
+  
+      console.log('Banner ad should be visible now');
+    } catch (error) {
+      console.error('AdMob initialization or showBanner failed:', error);
+    }
   }
   async generateQR() {
     try {
