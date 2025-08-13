@@ -1,12 +1,18 @@
 import type { CapacitorConfig } from '@capacitor/cli';
 
 const config: CapacitorConfig = {
-  appId: 'com.neiruzlab.app',
+  appId: 'io.ionic.starter',
   appName: 'qr-generator',
   webDir: 'www',
-  plugins: {
-    AdMob: {
-      appId: 'ca-app-pub-3168726036346781~1389890676', // ✅ Usa "appId" en lugar de "appIdAndroid"
+  cordova: {
+    preferences: {
+      ScrollEnabled: 'false',
+      BackupWebStorage: 'none',
+      SplashMaintainAspectRatio: 'true',
+      FadeSplashScreenDuration: '300',
+      SplashShowOnlyFirstTime: 'false',
+      SplashScreen: 'screen',
+      SplashScreenDelay: '3000'
     }
   }
 };

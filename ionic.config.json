@@ -1,7 +1,8 @@
 {
   "name": "qr-generator",
   "integrations": {
-    "cordova": {}
+    "cordova": {},
+    "capacitor": {}
   },
   "type": "angular"
 }

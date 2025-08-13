@@ -1,23 +1,34 @@
 <ion-header>
   <ion-toolbar color="light" class="toolbar-custom">
     <div class="titulo-con-imagen">
-      <img src="assets/img/qrlogo.jpg" alt="Logo" class="logo-titulo" />
       <ion-title class="titulo-centrado">QR Generador</ion-title>
     </div>
   </ion-toolbar>
 </ion-header>
 
 <ion-content class="ion-padding" fullscreen="true">
-
   <ion-grid>
     <ion-row class="ion-align-items-center">
-      <ion-col size="9">
-        <ion-item style="--background: #f0f0f0;">
-          <ion-label position="floating" style="color: rgb(124, 9, 9);">Escribe un texto o pega un enlace</ion-label>
-          <ion-input [(ngModel)]="qrData" style="color: black;"></ion-input>
-        </ion-item>
+
+      <ion-col size="3">
+        <ion-button
+          expand="block"
+          shape="round"
+          color="success"
+          style="height: 100%; width: 100%; font-size: 20px;"
+          (click)="pegarTexto()">
+          <ion-icon name="clipboard-outline" slot="icon-only"></ion-icon>
+        </ion-button>
       </ion-col>
-      <ion-col size="3" class="ion-text-center">
+
+      <ion-col size="6">
+        <div class="input-container">
+          <ion-label position="stacked" style="color: rgb(124, 9, 9);">Escribe un texto o pega un enlace</ion-label>
+          <ion-input [(ngModel)]="qrData" style="color: black;"></ion-input>
+        </div>
+      </ion-col>
+
+      <ion-col size="3">
         <ion-button
           expand="block"
           shape="round"
@@ -27,26 +38,44 @@
           <ion-icon name="trash" slot="icon-only"></ion-icon>
         </ion-button>
       </ion-col>
+
     </ion-row>
   </ion-grid>
-
   <ion-item>
     <ion-label color="dark">Color</ion-label>
     <ion-input type="color" [(ngModel)]="colorDark" style="max-width: 60px;"></ion-input>
     <ion-label color="medium">Fondo</ion-label>
     <ion-input type="color" [(ngModel)]="colorLight" style="max-width: 60px;"></ion-input>
   </ion-item>
-
-  <ion-button 
-  expand="block" 
-  ngClass="boton-generar" 
-  (click)="generateQR()">
-  Generar QR
-</ion-button>
-
+  <ion-button expand="block" ngClass="boton-generar" (click)="generateQR()">
+    Generar QR
+  </ion-button>
   <div *ngIf="qrImage" class="qr-container" ngClass="qr-generado">
     <img ngClass="imgqr" [src]="qrImage" alt="QR Code" class="qr-image" />
-    <ion-button ngClass="boton-generar"  expand="block" (click)="shareQR()">Compartir QR</ion-button>
+    <ion-button ngClass="boton-generar" expand="block" (click)="shareQR()">Compartir QR</ion-button>
   </div>
-
 </ion-content>
+
+<ion-footer class="ion-no-border">
+  <ion-toolbar>
+    <ion-tabs>
+      <ion-tab-bar class="custom-tab-bar">
+        <ion-tab-button (click)="goToScanner()" class="tab-button-left">
+          <ion-icon name="scan-circle-outline"></ion-icon>
+          <ion-label>Escanear</ion-label>
+        </ion-tab-button>
+
+        <ion-tab-button (click)="goToMenu()" class="center-button-container">
+          <div class="center-button-circle">
+            <img src="assets/img/qrlogo.jpg" alt="Logo" class="center-logo" />
+          </div>
+        </ion-tab-button>
+
+        <ion-tab-button (click)="goToGenerator()" class="tab-button-right">
+          <ion-icon name="qr-code-outline"></ion-icon>
+          <ion-label>Generador</ion-label>
+        </ion-tab-button>
+      </ion-tab-bar>
+    </ion-tabs>
+  </ion-toolbar>
+</ion-footer>

@@ -5,6 +5,7 @@ import * as QRCode from 'qrcode';
 import { Dialog } from '@capacitor/dialog';
 import { Share } from '@capacitor/share';
 import { Platform } from '@ionic/angular';
+import { Router } from '@angular/router';
 
 
 @Component({
@@ -19,9 +20,9 @@ export class HomePage  implements OnInit{
   qrImage: string = '';
   colorDark = '#000000';
   colorLight = '#ffffff';
-  ModoDesarrollo: boolean = false;
+  ModoDesarrollo: boolean = true;
 
-  constructor(private platform: Platform) { }
+  constructor(private platform: Platform, private router: Router) { }
 
   ngOnInit() {
     this.platform.ready().then(() => {
@@ -45,6 +46,17 @@ export class HomePage  implements OnInit{
       console.error('AdMob initialization or showBanner failed:', error);
     }
   }
+
+   async pegarTexto() {
+    try {
+      const textoDelPortapapeles = await navigator.clipboard.readText();
+      this.qrData = textoDelPortapapeles;
+    } catch (err) {
+      console.error('Error al leer el portapapeles:', err);
+      alert('No se pudo acceder al portapapeles. Asegúrate de haber otorgado los permisos.');
+    }
+  }
+
   async generateQR() {
     try {
       const options = {
@@ -155,4 +167,19 @@ export class HomePage  implements OnInit{
 
     await AdMob.showInterstitial();
   }
+
+   goToMenu() {
+    this.router.navigateByUrl('/menu');
+  }
+
+  // Método para ir al generador de QR (esta misma página)
+  goToGenerator() {
+    this.router.navigateByUrl('/home');
+  }
+
+  // Método para ir al escáner
+  goToScanner() {
+    this.router.navigateByUrl('/scan');
+  }
+
 }
