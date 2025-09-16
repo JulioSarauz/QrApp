@@ -216,3 +216,35 @@ ion-content.menu-content {
   justify-content: center;
   align-items: center;
 }
+.menu-center-container {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center; /* centra verticalmente */
+  align-items: center;     /* centra horizontalmente */
+}
+
+.menu-options-container {
+  display: flex;
+  flex-direction: row;
+  gap: 40px; /* espacio entre botones */
+}
+
+.menu-option-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  cursor: pointer;
+}
+
+.circular-button {
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  background-color: #4caf50;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 30px;
+  color: white;
+}

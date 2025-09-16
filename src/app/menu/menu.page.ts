@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
+import { AdMob, BannerAdPosition, BannerAdSize } from '@capacitor-community/admob';
 
 @Component({
   selector: 'app-menu',
@@ -9,9 +10,29 @@ import { Router } from '@angular/router';
 })
 export class MenuPage implements OnInit {
 
+  ModoDesarrollo: boolean = true;
+
   constructor(private router: Router) { }
 
-  ngOnInit() {
+  async ngOnInit() {
+    AdMob.hideBanner();
+    await this.showBanner();
+  }
+
+  async showBanner() {
+    try {
+      console.log("mostrar");
+      
+      await AdMob.initialize();
+      await AdMob.showBanner({
+        adId: 'ca-app-pub-3168726036346781/9507429127', // tu adId
+        adSize: BannerAdSize.BANNER,
+        position: BannerAdPosition.CENTER, // queda centrado entre opciones y footer
+        isTesting: this.ModoDesarrollo,
+      });
+    } catch (err) {
+      console.error('Error mostrando banner:', err);
+    }
   }
 
   goToGenerator() {
@@ -21,7 +42,8 @@ export class MenuPage implements OnInit {
   goToScanner() {
     this.router.navigateByUrl('/scan');
   }
-   goToMenu() {
+
+  goToMenu() {
     this.router.navigateByUrl('/menu');
   }
 }

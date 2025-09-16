@@ -1,26 +1,30 @@
-<ion-header style="margin-bottom: 50%;">
-  <ion-toolbar color="light" class="toolbar-custom">
-    <div class="titulo-con-imagen">
-      <ion-title class="titulo-centrado">QR Generador</ion-title>
-    </div>
+<ion-header>
+  <ion-toolbar color="light">
+    <ion-title class="titulo-centrado">QR Generador</ion-title>
   </ion-toolbar>
 </ion-header>
 
-<ion-content class="ion-padding menu-content">
-  <div class="menu-options-container">
-    <div class="menu-option-container" (click)="goToGenerator()">
-      <div class="circular-button">
-        <ion-icon name="qr-code-outline"></ion-icon>
+<ion-content class="ion-padding menu-content" fullscreen>
+  <!-- Contenedor principal con Flexbox centrado -->
+  <div class="menu-center-container">
+    <div class="menu-options-container">
+      <div class="menu-option-container" (click)="goToGenerator()">
+        <div class="circular-button">
+          <ion-icon name="qr-code-outline"></ion-icon>
+        </div>
+        <ion-label>Generar QR</ion-label>
       </div>
-      <ion-label>Generar QR</ion-label>
+
+      <div class="menu-option-container" (click)="goToScanner()">
+        <div class="circular-button">
+          <ion-icon name="scan-circle-outline"></ion-icon>
+        </div>
+        <ion-label>Escanear QR</ion-label>
+      </div>
     </div>
 
-    <div class="menu-option-container" (click)="goToScanner()">
-      <div class="circular-button">
-        <ion-icon name="scan-circle-outline"></ion-icon>
-      </div>
-      <ion-label>Escanear QR</ion-label>
-    </div>
+    <!-- Banner de publicidad -->
+    <div id="ad-banner" style="width:100%; height:50px; margin-top: 20px;"></div>
   </div>
 </ion-content>
 

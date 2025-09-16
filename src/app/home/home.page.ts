@@ -6,7 +6,7 @@ import { Dialog } from '@capacitor/dialog';
 import { Share } from '@capacitor/share';
 import { Platform } from '@ionic/angular';
 import { Router } from '@angular/router';
-import { Clipboard } from '@capacitor/clipboard';   // ✅ Importar Clipboard
+import { Clipboard } from '@capacitor/clipboard';
 
 @Component({
   selector: 'app-home',
@@ -22,9 +22,13 @@ export class HomePage implements OnInit, OnDestroy {
   colorLight = '#ffffff';
   ModoDesarrollo: boolean = true;
 
+  errorClipboard: string | null = null;  // Para mostrar errores de portapapeles
+  errorGeneral: string | null = null;    // Para otros errores generales
+
   constructor(private platform: Platform, private router: Router) { }
 
   async ngOnInit() {
+    AdMob.hideBanner();
     await this.platform.ready();
     this.initializeAdMob();
   }
@@ -33,23 +37,19 @@ export class HomePage implements OnInit, OnDestroy {
     AdMob.hideBanner();
   }
 
+  // ----------------- AdMob -----------------
   async initializeAdMob() {
     try {
       await AdMob.initialize();
-      console.log('AdMob initialized successfully');
 
       (AdMob as any).addListener('bannerAdLoaded', () => {
         const contentEl = document.getElementById('main-content');
-        if (contentEl) {
-          contentEl.classList.add('with-ad-padding');
-        }
+        if (contentEl) contentEl.classList.add('with-ad-padding');
       });
 
       (AdMob as any).addListener('bannerAdFailedToLoad', () => {
         const contentEl = document.getElementById('main-content');
-        if (contentEl) {
-          contentEl.classList.remove('with-ad-padding');
-        }
+        if (contentEl) contentEl.classList.remove('with-ad-padding');
       });
 
       await AdMob.showBanner({
@@ -59,68 +59,82 @@ export class HomePage implements OnInit, OnDestroy {
         isTesting: true,
       });
 
-      console.log('Banner ad should be visible now');
-    } catch (error) {
-      console.error('AdMob initialization or showBanner failed:', error);
+    } catch (error: any) {
+      console.error('AdMob error:', error);
+      this.errorGeneral = 'Error inicializando AdMob: ' + (error?.message || error);
     }
   }
 
-  // ✅ Nuevo método usando Capacitor Clipboard
-  async pegarTexto() {
+  async showInterstitialAd() {
     try {
-      const { value } = await Clipboard.read();
-      this.qrData = value ?? '';
-      if (!this.qrData) {
-        await Dialog.alert({
-          title: 'Portapapeles vacío',
-          message: 'No se encontró texto en el portapapeles.',
-        });
-      }
-    } catch (err) {
-      console.error('Error al leer el portapapeles:', err);
+      await AdMob.prepareInterstitial({
+        adId: 'ca-app-pub-3168726036346781/9858782916',
+        isTesting: this.ModoDesarrollo,
+      });
+
+      (AdMob as any).addListener('interstitialAdDismissed', () => { });
+      await AdMob.showInterstitial();
+    } catch (err: any) {
+      console.error('Interstitial error:', err);
+      this.errorGeneral = 'Error mostrando anuncio intersticial: ' + (err?.message || err);
+    }
+  }
+
+  // ----------------- Portapapeles -----------------
+ async pegarTexto() {
+  try {
+    let value = '';
+
+    // Solo para pruebas en navegador
+    if (!this.platform.is('capacitor')) {
+      value = prompt('Pega tu texto aquí:') || '';
+    } else {
+      const clipboard = await Clipboard.read();
+      value = clipboard.value ?? '';
+    }
+
+    this.qrData = value;
+
+    if (!this.qrData) {
       await Dialog.alert({
-        title: 'Error',
-        message: 'No se pudo acceder al portapapeles.',
+        title: 'Portapapeles vacío',
+        message: 'No se encontró texto en el portapapeles.',
       });
     }
+  } catch (err) {
+    console.error('Error al leer el portapapeles:', err);
+    await Dialog.alert({
+      title: 'Error',
+      message: 'Copia primero un texto.',
+    });
   }
+}
 
-  // ✅ Método extra para copiar texto
+
   async copiarTexto() {
+    this.errorClipboard = null;
     try {
-      if (this.qrData.trim().length === 0) {
-        await Dialog.alert({
-          title: 'Atención',
-          message: 'No hay texto para copiar.',
-        });
+      if (!this.qrData.trim()) {
+        this.errorClipboard = 'No hay texto para copiar.';
         return;
       }
-      await Clipboard.write({
-        string: this.qrData,
-      });
-      await Dialog.alert({
-        title: 'Copiado',
-        message: 'Texto copiado al portapapeles.',
-      });
-    } catch (err) {
-      console.error('Error al copiar al portapapeles:', err);
+      await Clipboard.write({ string: this.qrData });
+      this.errorClipboard = 'Texto copiado al portapapeles.';
+    } catch (err: any) {
+      console.error('Clipboard write error:', err);
+      this.errorClipboard = 'Error al copiar texto: ' + (err?.message || err);
     }
   }
 
+  // ----------------- QR -----------------
   async generateQR() {
+    this.errorGeneral = null;
     try {
-      const options = {
-        color: {
-          dark: this.colorDark,
-          light: this.colorLight,
-        }
-      };
+      const options = { color: { dark: this.colorDark, light: this.colorLight } };
       this.qrImage = await QRCode.toDataURL(this.qrData, options);
-    } catch (err) {
-      await Dialog.alert({
-        title: 'Error',
-        message: 'Ingrese un enlace válido',
-      });
+    } catch (err: any) {
+      console.error('QR generate error:', err);
+      this.errorGeneral = 'Error generando QR: ' + (err?.message || err);
     }
   }
 
@@ -129,23 +143,14 @@ export class HomePage implements OnInit, OnDestroy {
     this.qrImage = '';
     this.colorDark = '#000000';
     this.colorLight = '#ffffff';
+    this.errorClipboard = null;
+    this.errorGeneral = null;
   }
 
   async shareQR() {
+    this.errorGeneral = null;
     try {
-      await AdMob.prepareInterstitial({
-        adId: 'ca-app-pub-3168726036346781/9858782916',
-        isTesting: this.ModoDesarrollo,
-      });
-
-      const adClosed = new Promise<void>((resolve) => {
-        (AdMob as any).addListener('interstitialAdDismissed', () => {
-          resolve();
-        });
-      });
-
-      await AdMob.showInterstitial();
-      await adClosed;
+      await this.showInterstitialAd();
 
       const base64 = this.qrImage.split(',')[1];
       const fileName = `qr-code-${Date.now()}.png`;
@@ -162,24 +167,22 @@ export class HomePage implements OnInit, OnDestroy {
         url: savedFile.uri,
         dialogTitle: 'Compartir código QR con…',
       });
-
-    } catch (error) {
-      console.log(error);
+    } catch (err: any) {
+      console.error('Share QR error:', err);
+      this.errorGeneral = 'Error compartiendo QR: ' + (err?.message || err);
     }
   }
 
   async downloadQR() {
-    await this.showInterstitialAd();
-
-    const base64 = this.qrImage.split(',')[1];
-
+    this.errorGeneral = null;
     try {
+      await this.showInterstitialAd();
+
+      const base64 = this.qrImage.split(',')[1];
       const permResult = await Filesystem.requestPermissions();
+
       if (permResult.publicStorage !== 'granted') {
-        await Dialog.alert({
-          title: 'Permiso denegado',
-          message: 'Se necesita permiso para guardar archivos en el almacenamiento.',
-        });
+        this.errorGeneral = 'Permiso denegado: no se puede guardar archivo.';
         return;
       }
 
@@ -189,38 +192,16 @@ export class HomePage implements OnInit, OnDestroy {
         directory: Directory.Documents,
       });
 
-      await Dialog.alert({
-        title: 'Éxito',
-        message: `Código QR guardado exitosamente.\n\nRuta:\n${result.uri}`,
-      });
-    } catch (error) {
-      await Dialog.alert({
-        title: 'Error',
-        message: 'No se pudo guardar el código QR.',
-      });
+      this.errorGeneral = `Código QR guardado exitosamente en: ${result.uri}`;
+    } catch (err: any) {
+      console.error('Download QR error:', err);
+      this.errorGeneral = 'Error guardando QR: ' + (err?.message || err);
     }
   }
 
-  async showInterstitialAd() {
-    await AdMob.prepareInterstitial({
-      adId: 'ca-app-pub-3168726036346781/9858782916',
-      isTesting: this.ModoDesarrollo,
-    });
+  // ----------------- Navegación -----------------
+  goToMenu() { this.router.navigateByUrl('/menu'); }
+  goToGenerator() { this.router.navigateByUrl('/home'); }
+  goToScanner() { this.router.navigateByUrl('/scan'); }
 
-    (AdMob as any).addListener('interstitialAdDismissed', () => { });
-
-    await AdMob.showInterstitial();
-  }
-
-  goToMenu() {
-    this.router.navigateByUrl('/menu');
-  }
-
-  goToGenerator() {
-    this.router.navigateByUrl('/home');
-  }
-
-  goToScanner() {
-    this.router.navigateByUrl('/scan');
-  }
 }
