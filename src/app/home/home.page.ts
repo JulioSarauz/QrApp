@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { AdMob, BannerAdPosition, BannerAdSize } from '@capacitor-community/admob';
 import { Filesystem, Directory } from '@capacitor/filesystem';
 import * as QRCode from 'qrcode';
@@ -6,7 +6,7 @@ import { Dialog } from '@capacitor/dialog';
 import { Share } from '@capacitor/share';
 import { Platform } from '@ionic/angular';
 import { Router } from '@angular/router';
-
+import { Clipboard } from '@capacitor/clipboard';   // ✅ Importar Clipboard
 
 @Component({
   selector: 'app-home',
@@ -14,7 +14,7 @@ import { Router } from '@angular/router';
   styleUrls: ['home.page.scss'],
   standalone: false,
 })
-export class HomePage  implements OnInit{
+export class HomePage implements OnInit, OnDestroy {
 
   qrData: string = '';
   qrImage: string = '';
@@ -24,36 +24,86 @@ export class HomePage  implements OnInit{
 
   constructor(private platform: Platform, private router: Router) { }
 
-  ngOnInit() {
-    this.platform.ready().then(() => {
-      this.initializeAdMob();
-    });
+  async ngOnInit() {
+    await this.platform.ready();
+    this.initializeAdMob();
   }
+
+  ngOnDestroy() {
+    AdMob.hideBanner();
+  }
+
   async initializeAdMob() {
     try {
-      const result = await AdMob.initialize();
-      console.log('AdMob initialized:', result);
-  
+      await AdMob.initialize();
+      console.log('AdMob initialized successfully');
+
+      (AdMob as any).addListener('bannerAdLoaded', () => {
+        const contentEl = document.getElementById('main-content');
+        if (contentEl) {
+          contentEl.classList.add('with-ad-padding');
+        }
+      });
+
+      (AdMob as any).addListener('bannerAdFailedToLoad', () => {
+        const contentEl = document.getElementById('main-content');
+        if (contentEl) {
+          contentEl.classList.remove('with-ad-padding');
+        }
+      });
+
       await AdMob.showBanner({
         adId: 'ca-app-pub-3168726036346781/9507429127',
-        adSize: BannerAdSize.BANNER,  // cambiar a BANNER para probar
-        position: BannerAdPosition.BOTTOM_CENTER, // también probar TOP_CENTER
+        adSize: BannerAdSize.BANNER,
+        position: BannerAdPosition.BOTTOM_CENTER,
         isTesting: true,
       });
-  
+
       console.log('Banner ad should be visible now');
     } catch (error) {
       console.error('AdMob initialization or showBanner failed:', error);
     }
   }
 
-   async pegarTexto() {
+  // ✅ Nuevo método usando Capacitor Clipboard
+  async pegarTexto() {
     try {
-      const textoDelPortapapeles = await navigator.clipboard.readText();
-      this.qrData = textoDelPortapapeles;
+      const { value } = await Clipboard.read();
+      this.qrData = value ?? '';
+      if (!this.qrData) {
+        await Dialog.alert({
+          title: 'Portapapeles vacío',
+          message: 'No se encontró texto en el portapapeles.',
+        });
+      }
     } catch (err) {
       console.error('Error al leer el portapapeles:', err);
-      alert('No se pudo acceder al portapapeles. Asegúrate de haber otorgado los permisos.');
+      await Dialog.alert({
+        title: 'Error',
+        message: 'No se pudo acceder al portapapeles.',
+      });
+    }
+  }
+
+  // ✅ Método extra para copiar texto
+  async copiarTexto() {
+    try {
+      if (this.qrData.trim().length === 0) {
+        await Dialog.alert({
+          title: 'Atención',
+          message: 'No hay texto para copiar.',
+        });
+        return;
+      }
+      await Clipboard.write({
+        string: this.qrData,
+      });
+      await Dialog.alert({
+        title: 'Copiado',
+        message: 'Texto copiado al portapapeles.',
+      });
+    } catch (err) {
+      console.error('Error al copiar al portapapeles:', err);
     }
   }
 
@@ -80,52 +130,50 @@ export class HomePage  implements OnInit{
     this.colorDark = '#000000';
     this.colorLight = '#ffffff';
   }
+
   async shareQR() {
     try {
       await AdMob.prepareInterstitial({
         adId: 'ca-app-pub-3168726036346781/9858782916',
         isTesting: this.ModoDesarrollo,
       });
-  
-      // Esperar a que se cierre el anuncio antes de continuar
+
       const adClosed = new Promise<void>((resolve) => {
         (AdMob as any).addListener('interstitialAdDismissed', () => {
           resolve();
         });
       });
-  
+
       await AdMob.showInterstitial();
-      await adClosed; // Esperar cierre del anuncio
-  
+      await adClosed;
+
       const base64 = this.qrImage.split(',')[1];
       const fileName = `qr-code-${Date.now()}.png`;
-  
+
       const savedFile = await Filesystem.writeFile({
         path: fileName,
         data: base64,
         directory: Directory.Cache,
       });
-  
+
       await Share.share({
         title: 'Mi Código QR',
         text: 'QR generado por QR generador...',
         url: savedFile.uri,
         dialogTitle: 'Compartir código QR con…',
       });
-  
+
     } catch (error) {
       console.log(error);
-      
     }
   }
 
   async downloadQR() {
     await this.showInterstitialAd();
-  
+
     const base64 = this.qrImage.split(',')[1];
-  
+
     try {
-      // ✅ Solicitar permisos
       const permResult = await Filesystem.requestPermissions();
       if (permResult.publicStorage !== 'granted') {
         await Dialog.alert({
@@ -134,15 +182,13 @@ export class HomePage  implements OnInit{
         });
         return;
       }
-  
-      // ✅ Guardar en carpeta Documentos
+
       const result = await Filesystem.writeFile({
         path: `qr-code-${Date.now()}.png`,
         data: base64,
         directory: Directory.Documents,
       });
-  
-      // ✅ Mostrar mensaje
+
       await Dialog.alert({
         title: 'Éxito',
         message: `Código QR guardado exitosamente.\n\nRuta:\n${result.uri}`,
@@ -154,32 +200,27 @@ export class HomePage  implements OnInit{
       });
     }
   }
-  
-  
+
   async showInterstitialAd() {
     await AdMob.prepareInterstitial({
       adId: 'ca-app-pub-3168726036346781/9858782916',
       isTesting: this.ModoDesarrollo,
-    });    
-
-    (AdMob as any).addListener('interstitialAdDismissed', () => {
     });
+
+    (AdMob as any).addListener('interstitialAdDismissed', () => { });
 
     await AdMob.showInterstitial();
   }
 
-   goToMenu() {
+  goToMenu() {
     this.router.navigateByUrl('/menu');
   }
 
-  // Método para ir al generador de QR (esta misma página)
   goToGenerator() {
     this.router.navigateByUrl('/home');
   }
 
-  // Método para ir al escáner
   goToScanner() {
     this.router.navigateByUrl('/scan');
   }
-
 }
