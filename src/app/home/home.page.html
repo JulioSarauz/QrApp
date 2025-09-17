@@ -1,42 +1,42 @@
 <ion-header>
   <ion-toolbar color="light">
-    <ion-buttons slot="start">
-      <ion-button (click)="goToMenu()">
-        <ion-icon slot="icon-only" name="arrow-back"></ion-icon>
-      </ion-button>
-    </ion-buttons>
-    <ion-title>Generador QR</ion-title>
+    <ion-title class="titulo-centrado">Generador QR</ion-title>
   </ion-toolbar>
 </ion-header>
 
 <ion-content class="ion-padding" fullscreen="false" id="main-content">
-  <ion-grid>
-    <ion-row class="ion-align-items-center">
 
-      <ion-col size="3">
+  <!-- Botón de regresar al menú -->
+  <ion-button 
+    expand="block" 
+    class="boton-generar" 
+    (click)="goToMenu()" 
+    style="margin-bottom: 20px;">
+    <ion-icon name="arrow-back" slot="start"></ion-icon>
+    Regresar al Menú
+  </ion-button>
+
+  <!-- Cuadro de mando: fila de 2 botones (Pegar y Borrar) -->
+  <ion-grid style="margin-bottom: 20px;">
+    <ion-row class="ion-align-items-center" style="gap: 0;">
+
+      <!-- Botón Pegar -->
+      <ion-col>
         <ion-button
           expand="block"
-          shape="round"
+          class="boton-generar"
           color="success"
-          style="height: 100%; width: 100%; font-size: 20px;"
           (click)="pegarTexto()">
           <ion-icon name="clipboard-outline" slot="icon-only"></ion-icon>
         </ion-button>
       </ion-col>
 
-      <ion-col size="6">
-        <div class="input-container">
-          <ion-label position="stacked" style="color: rgb(124, 9, 9);">Escribe un texto o pega un enlace</ion-label>
-          <ion-input [(ngModel)]="qrData" style="color: black;"></ion-input>
-        </div>
-      </ion-col>
-
-      <ion-col size="3">
+      <!-- Botón Borrar -->
+      <ion-col>
         <ion-button
           expand="block"
-          shape="round"
+          class="boton-generar"
           color="danger"
-          style="height: 100%; width: 100%; font-size: 20px;"
           (click)="limpiarCampos()">
           <ion-icon name="trash" slot="icon-only"></ion-icon>
         </ion-button>
@@ -45,6 +45,13 @@
     </ion-row>
   </ion-grid>
 
+  <!-- Input para el QR -->
+  <div class="input-container" style="margin-bottom: 20px;">
+    <ion-label position="stacked" style="color: rgb(124, 9, 9);">Escribe un texto o pega un enlace</ion-label>
+    <ion-input [(ngModel)]="qrData" style="color: black;"></ion-input>
+  </div>
+
+  <!-- Selección de colores -->
   <ion-item>
     <ion-label color="dark">Color</ion-label>
     <ion-input type="color" [(ngModel)]="colorDark" style="max-width: 60px;"></ion-input>
@@ -52,13 +59,17 @@
     <ion-input type="color" [(ngModel)]="colorLight" style="max-width: 60px;"></ion-input>
   </ion-item>
 
-  <ion-button expand="block" ngClass="boton-generar" (click)="generateQR()">
+  <!-- Botón Generar QR -->
+  <ion-button expand="block" class="boton-generar" (click)="generateQR()" style="margin-top: 20px;">
     Generar QR
   </ion-button>
 
-  <div *ngIf="qrImage" class="qr-container" ngClass="qr-generado">
-    <img ngClass="imgqr" [src]="qrImage" alt="QR Code" class="qr-image" />
-    <ion-button ngClass="boton-generar" expand="block" (click)="shareQR()">Compartir QR</ion-button>
+  <!-- Resultado QR -->
+  <div *ngIf="qrImage" class="qr-container qr-generado" style="margin-top: 20px;">
+    <img class="imgqr" [src]="qrImage" alt="QR Code" />
+    <ion-button class="boton-generar" expand="block" (click)="shareQR()" style="margin-top: 10px;">
+      Compartir QR
+    </ion-button>
   </div>
-</ion-content>
 
+</ion-content>

@@ -15,19 +15,21 @@ export class MenuPage implements OnInit {
   constructor(private router: Router) { }
 
   async ngOnInit() {
-    AdMob.hideBanner();
     await this.showBanner();
+  }
+
+  // Este método se llama automáticamente cuando la página está a punto de salir
+  ionViewWillLeave() {
+    AdMob.hideBanner();
   }
 
   async showBanner() {
     try {
-      console.log("mostrar");
-      
       await AdMob.initialize();
       await AdMob.showBanner({
-        adId: 'ca-app-pub-3168726036346781/9507429127', // tu adId
+        adId: 'ca-app-pub-3168726036346781/9507429127',
         adSize: BannerAdSize.BANNER,
-        position: BannerAdPosition.CENTER, // queda centrado entre opciones y footer
+        position: BannerAdPosition.CENTER,
         isTesting: this.ModoDesarrollo,
       });
     } catch (err) {
@@ -35,15 +37,7 @@ export class MenuPage implements OnInit {
     }
   }
 
-  goToGenerator() {
-    this.router.navigateByUrl('/home');
-  }
-
-  goToScanner() {
-    this.router.navigateByUrl('/scan');
-  }
-
-  goToMenu() {
-    this.router.navigateByUrl('/menu');
-  }
+  goToGenerator() { this.router.navigateByUrl('/home'); }
+  goToScanner() { this.router.navigateByUrl('/scan'); }
+  goToMenu() { this.router.navigateByUrl('/menu'); }
 }

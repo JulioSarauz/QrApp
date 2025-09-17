@@ -1,18 +1,18 @@
 <ion-header>
-  <ion-toolbar color="light" class="toolbar-custom">
-    <!-- Botón para regresar -->
-    <ion-buttons slot="start">
-      <ion-button (click)="goToMenu()">
-        <ion-icon slot="icon-only" name="arrow-back-outline"></ion-icon>
-      </ion-button>
-    </ion-buttons>
-
+  <ion-toolbar color="light">
     <div class="titulo-con-imagen">
-      <ion-title class="titulo-centrado">Escanear QR</ion-title>
+      <ion-title class="titulo-centrado">QR Generador</ion-title>
     </div>
   </ion-toolbar>
 </ion-header>
 
-<ion-content class="ion-padding">
-  <div id="camera-preview"></div>
+<ion-content class="ion-padding" fullscreen>
+  <!-- Botón para regresar al menú, estilo botón azul como Generar QR -->
+  <ion-button expand="block" class="boton-generar" style="background-color: #1b2236; margin-bottom: 20px;" (click)="goToMenu()">
+    <ion-icon name="arrow-back-outline" slot="start"></ion-icon>
+    Volver al Menú
+  </ion-button>
+
+  <!-- Contenedor de la cámara para escanear QR -->
+  <div id="camera-preview" style="width: 100%; height: calc(100% - 80px);"></div>
 </ion-content>
