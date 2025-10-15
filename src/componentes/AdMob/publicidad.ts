@@ -47,18 +47,34 @@ export async function initializeAdMob(): Promise<void> {
       console.error('Interstitial error:', err);
     }
   }
-
-  //BANNER DE MENU PRINCIPAL
-  export async function showBannerMenu() {
+  //BANER GENERAR QR
+  export async function showBannerCrear() {
     try {
+      await AdMob.removeBanner(); 
       await AdMob.initialize();
       await AdMob.showBanner({
         adId: CodigoBanner,
         adSize: BannerAdSize.BANNER,
-        position: BannerAdPosition.CENTER,
+        position: BannerAdPosition.BOTTOM_CENTER,
         isTesting: ModoDesarrollador,
       });
-      console.log("se inicio banner");
+      console.log("se inicio banner 2");
+    } catch (err) {
+      console.error('Error mostrando banner:', err);
+    }
+  }
+  //BANNER DE MENU PRINCIPAL
+  export async function showBannerMenu(posicion:BannerAdPosition) {
+    try {
+      await AdMob.removeBanner(); 
+      await AdMob.initialize();
+      await AdMob.showBanner({
+        adId: CodigoBanner,
+        adSize: BannerAdSize.BANNER,
+        position: posicion,
+        isTesting: ModoDesarrollador,
+      });
+      console.log("se inicio banner 1");
     } catch (err) {
       console.error('Error mostrando banner:', err);
     }
@@ -66,5 +82,5 @@ export async function initializeAdMob(): Promise<void> {
 
   //Ocultar banner 
   export async function OcultarPublicidad(){
-    await AdMob.hideBanner();
+    //await AdMob.hideBanner();
   }

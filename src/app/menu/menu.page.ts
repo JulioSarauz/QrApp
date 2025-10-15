@@ -1,6 +1,9 @@
-import { Component, OnInit, AfterViewInit } from '@angular/core';
-import { Router } from '@angular/router';
+import { Component, OnInit, OnDestroy } from '@angular/core'; // Importamos OnDestroy
+import { Router, NavigationEnd } from '@angular/router'; // Importamos NavigationEnd
 import { OcultarPublicidad, showBannerMenu } from 'src/componentes/AdMob/publicidad';
+import { Subscription } from 'rxjs'; // Necesario para gestionar la suscripción
+import { filter } from 'rxjs/operators'; // Necesario para filtrar eventos
+import { BannerAdPosition } from '@capacitor-community/admob';
 
 @Component({
   selector: 'app-menu',
@@ -8,12 +11,24 @@ import { OcultarPublicidad, showBannerMenu } from 'src/componentes/AdMob/publici
   styleUrls: ['./menu.page.scss'],
   standalone: false,
 })
-export class MenuPage implements OnInit {
-
+// Implementamos OnDestroy para limpiar la suscripción
+export class MenuPage implements OnInit, OnDestroy {
+  private routerSubscription: Subscription = new Subscription();
   constructor(private router: Router) { }
-
   ngOnInit() {
-    showBannerMenu();
+
+    this.routerSubscription = this.router.events.pipe(
+      filter((event) => event instanceof NavigationEnd)
+    ).subscribe((event: NavigationEnd) => {
+      if (event.urlAfterRedirects.includes('/menu')) {
+        showBannerMenu(BannerAdPosition.CENTER);
+      }
+    });
+  }
+  ngOnDestroy(): void {
+    if (this.routerSubscription) {
+      this.routerSubscription.unsubscribe();
+    }
   }
 
   goToGenerator() { 

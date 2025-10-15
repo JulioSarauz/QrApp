@@ -1,13 +1,16 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
-import { AdMob, BannerAdPosition, BannerAdSize } from '@capacitor-community/admob';
 import { Filesystem, Directory } from '@capacitor/filesystem';
 import * as QRCode from 'qrcode';
 import { Dialog } from '@capacitor/dialog';
 import { Share } from '@capacitor/share';
 import { Platform } from '@ionic/angular';
-import { Router } from '@angular/router';
+import { Router, NavigationEnd } from '@angular/router';
 import { Clipboard } from '@capacitor/clipboard';
-import { initializeAdMob, OcultarPublicidad, showBannerMenu, showInterstitialAd } from 'src/componentes/AdMob/publicidad';
+import { OcultarPublicidad, showBannerMenu, showInterstitialAd } from 'src/componentes/AdMob/publicidad';
+import { Subscription } from 'rxjs';
+import { filter } from 'rxjs/operators';
+import { BannerAdPosition } from '@capacitor-community/admob';
+import { ToastController } from '@ionic/angular';
 
 @Component({
   selector: 'app-home',
@@ -15,76 +18,90 @@ import { initializeAdMob, OcultarPublicidad, showBannerMenu, showInterstitialAd 
   styleUrls: ['home.page.scss'],
   standalone: false,
 })
-export class HomePage implements OnInit {
 
-  qrData: string = '';
+export class HomePage implements OnInit, OnDestroy {
+  private routerSubscription: Subscription = new Subscription();
+   qrData: string = '';
   qrImage: string = '';
   colorDark = '#000000';
   colorLight = '#ffffff';
   ModoDesarrollo: boolean = true;
   errorClipboard: string | null = null;
-  errorGeneral: string | null = null;  
+  errorGeneral: string | null = null;
 
-  constructor(private platform: Platform, private router: Router) { }
-
-  async ngOnInit() {
-    await this.platform.ready();
-    initializeAdMob();
-  }
-  // ----------------- Portapapeles -----------------
- async pegarTexto() {
-  try {
-    let value = '';
-    // Solo para pruebas en navegador
-    if (!this.platform.is('capacitor')) {
-      value = prompt('Pega tu texto aquí:') || '';
-    } else {
-      const clipboard = await Clipboard.read();
-      value = clipboard.value ?? '';
-    }
-    this.qrData = value;
-    if (!this.qrData) {
-      await Dialog.alert({
-        title: 'Portapapeles vacío',
-        message: 'No se encontró texto en el portapapeles.',
-      });
-    }
-  } catch (err) {
-    console.error('Error al leer el portapapeles:', err);
-    await Dialog.alert({
-      title: 'Error',
-      message: 'Copia primero un texto.',
+  constructor(private router: Router, private platform:Platform, private toastController: ToastController) { }
+  ngOnInit() {
+    this.routerSubscription = this.router.events.pipe(
+      filter((event) => event instanceof NavigationEnd)
+    ).subscribe((event: NavigationEnd) => {
+      if (event.urlAfterRedirects.includes('/home')) {
+        showBannerMenu(BannerAdPosition.BOTTOM_CENTER);
+      }
     });
   }
-}
-
-async copiarTexto() {
-  this.errorClipboard = null;
-  try {
-    if (!this.qrData.trim()) {
-      this.errorClipboard = 'No hay texto para copiar.';
-      return;
+  ngOnDestroy(): void {
+    if (this.routerSubscription) {
+      this.routerSubscription.unsubscribe();
     }
-    await Clipboard.write({ string: this.qrData });
-    this.errorClipboard = 'Texto copiado al portapapeles.';
-  } catch (err: any) {
-    console.error('Clipboard write error:', err);
-    this.errorClipboard = 'Error al copiar texto: ' + (err?.message || err);
   }
-}
 
-  // ----------------- QR -----------------
-  async generateQR() {
-    this.errorGeneral = null;
+ 
+  async pegarTexto() {
     try {
-      const options = { color: { dark: this.colorDark, light: this.colorLight } };
-      this.qrImage = await QRCode.toDataURL(this.qrData, options);
+      let value = '';
+      if (!this.platform.is('capacitor')) {
+        value = prompt('Pega tu texto aquí:') || '';
+      } else {
+        const clipboard = await Clipboard.read();
+        value = clipboard.value ?? '';
+      }
+      this.qrData = value;
+      if (!this.qrData) {
+        await Dialog.alert({
+          title: 'Portapapeles vacío',
+          message: 'No se encontró texto en el portapapeles.',
+        });
+      }
+    } catch (err) {
+      console.error('Error al leer el portapapeles:', err);
+      await Dialog.alert({
+        title: 'Error',
+        message: 'Copia primero un texto.',
+      });
+    }
+  }
+  async copiarTexto() {
+    this.errorClipboard = null;
+    try {
+      if (!this.qrData.trim()) {
+        this.errorClipboard = 'No hay texto para copiar.';
+        return;
+      }
+      await Clipboard.write({ string: this.qrData });
+      this.errorClipboard = 'Texto copiado al portapapeles.';
     } catch (err: any) {
-      console.error('QR generate error:', err);
-      this.errorGeneral = 'Error generando QR: ' + (err?.message || err);
+      console.error('Clipboard write error:', err);
+      this.errorClipboard = 'Error al copiar texto: ' + (err?.message || err);
     }
   }
 
+async generateQR() {
+  try {
+    const options = { color: { dark: this.colorDark, light: this.colorLight } };
+    this.qrImage = await QRCode.toDataURL(this.qrData, options);
+  } catch (err: any) {
+    const errorMsg = 'Error generando QR: ' + (err?.message || err);
+    console.error(errorMsg);
+
+    const toast = await this.toastController.create({
+      message: errorMsg,
+      duration: 3000,
+      color: 'danger',
+      position: 'bottom',
+    });
+    await toast.present();
+  }
+}
   limpiarCampos() {
     this.qrData = '';
     this.qrImage = '';
@@ -93,7 +110,6 @@ async copiarTexto() {
     this.errorClipboard = null;
     this.errorGeneral = null;
   }
-
   async shareQR() {
     this.errorGeneral = null;
     try {
@@ -116,7 +132,6 @@ async copiarTexto() {
       this.errorGeneral = 'Error compartiendo QR: ' + (err?.message || err);
     }
   }
-
   async downloadQR() {
     this.errorGeneral = null;
     try {
@@ -139,19 +154,16 @@ async copiarTexto() {
     }
   }
 
-  // ----------------- Navegación -----------------
-  goToMenu() { 
+  goToMenu() {
     OcultarPublicidad();
-    showBannerMenu();
-    this.router.navigateByUrl('/menu'); 
+    this.router.navigateByUrl('/menu');
   }
-  goToGenerator() {    
-    OcultarPublicidad(); 
-    this.router.navigateByUrl('/home'); 
-  }
-  goToScanner() { 
+  goToGenerator() {
     OcultarPublicidad();
-    this.router.navigateByUrl('/scan'); 
+    this.router.navigateByUrl('/home');
   }
-
+  goToScanner() {
+    OcultarPublicidad();
+    this.router.navigateByUrl('/scan');
+  }
 }
