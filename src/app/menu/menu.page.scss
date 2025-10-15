@@ -1,4 +1,3 @@
-/* Contenedor principal de la pantalla de menú */
 .menu-content {
   display: flex;
   flex-direction: column;
@@ -11,28 +10,25 @@
   --padding-end: 0;
 }
 
-/* Contenedor central: opciones + banner */
 .menu-center-container {
   display: flex;
   flex-direction: column;
-  justify-content: flex-start; /* inicia desde arriba */
+  justify-content: flex-start;
   align-items: center;
   height: 100%;
   width: 100%;
-  padding-top: 60px; /* sube los botones un poco más */
+  padding-top: 60px;
   padding-bottom: 20px;
 }
 
-/* Opciones centradas horizontalmente */
 .menu-options-container {
   display: flex;
   flex-direction: row;
   gap: 40px;
   z-index: 1;
-  margin-bottom: 100px; /* más espacio para que no tape el banner */
+  margin-bottom: 100px;
 }
 
-/* Cada opción */
 .menu-option-container {
   display: flex;
   flex-direction: column;
@@ -41,7 +37,6 @@
   text-align: center;
 }
 
-/* Botones circulares */
 .circular-button {
   width: 80px;
   height: 80px;
@@ -69,50 +64,9 @@
   font-size: 14px;
 }
 
-/* Banner */
 #ad-banner {
   width: 100%;
   height: 50px;
   margin-top: 20px;
   z-index: 0;
-}
-
-/* Tab-bar personalizada */
-.custom-tab-bar {
-  --background: var(--ion-color-light);
-  height: 60px;
-  position: relative;
-  border-top-left-radius: 25px;
-  border-top-right-radius: 25px;
-  box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.1);
-}
-
-/* Botón central */
-.center-button-container {
-  height: 90px;
-  width: 90px;
-  position: absolute;
-  top: -30px;
-  left: 50%;
-  transform: translateX(-50%);
-  background: transparent;
-  z-index: 10;
-  --background-hover: transparent;
-}
-
-.center-button-circle {
-  height: 80px;
-  width: 80px;
-  border-radius: 50%;
-  background-color: var(--ion-color-light);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
-}
-
-.center-logo {
-  height: 60px;
-  width: 60px;
-  border-radius: 50%;
 }

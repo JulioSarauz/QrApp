@@ -1,11 +1,7 @@
-<ion-header>
-  <ion-toolbar color="light">
-    <ion-title class="titulo-centrado">QR Generador</ion-title>
-  </ion-toolbar>
-</ion-header>
+<app-cabecera></app-cabecera>
 
 <ion-content class="ion-padding menu-content" fullscreen>
-  <div class="menu-center-container" style="padding-top: 40px;">
+  <div class="menu-center-container">
     <div class="menu-options-container">
       <div class="menu-option-container" (click)="goToGenerator()">
         <div class="circular-button">
@@ -22,32 +18,8 @@
       </div>
     </div>
 
-    <div class="banner-spacer"></div>
-
     <div id="ad-banner"></div>
   </div>
 </ion-content>
 
-<ion-footer class="ion-no-border">
-  <ion-toolbar>
-    <ion-tabs>
-      <ion-tab-bar class="custom-tab-bar">
-        <ion-tab-button (click)="goToScanner()" class="tab-button-left">
-          <ion-icon name="scan-circle-outline"></ion-icon>
-          <ion-label>Escanear</ion-label>
-        </ion-tab-button>
-
-        <ion-tab-button (click)="goToMenu()" class="center-button-container">
-          <div class="center-button-circle">
-            <img src="assets/img/qrlogo.jpg" alt="Logo" class="center-logo" />
-          </div>
-        </ion-tab-button>
-
-        <ion-tab-button (click)="goToGenerator()" class="tab-button-right">
-          <ion-icon name="qr-code-outline"></ion-icon>
-          <ion-label>Generador</ion-label>
-        </ion-tab-button>
-      </ion-tab-bar>
-    </ion-tabs>
-  </ion-toolbar>
-</ion-footer>
+<app-footer></app-footer>

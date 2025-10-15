@@ -1,0 +1,23 @@
+<ion-footer class="ion-no-border">
+  <ion-toolbar>
+    <ion-tabs>
+      <ion-tab-bar class="custom-tab-bar">
+        <ion-tab-button (click)="goToScanner()" class="tab-button-left">
+          <ion-icon name="scan-circle-outline"></ion-icon>
+          <ion-label>Escanear</ion-label>
+        </ion-tab-button>
+
+        <ion-tab-button (click)="goToMenu()" class="center-button-container">
+          <div class="center-button-circle">
+            <img src="assets/img/qrlogo.jpg" alt="Logo" class="center-logo" />
+          </div>
+        </ion-tab-button>
+
+        <ion-tab-button (click)="goToGenerator()" class="tab-button-right">
+          <ion-icon name="qr-code-outline"></ion-icon>
+          <ion-label>Generador</ion-label>
+        </ion-tab-button>
+      </ion-tab-bar>
+    </ion-tabs>
+  </ion-toolbar>
+</ion-footer>
