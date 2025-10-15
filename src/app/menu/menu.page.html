@@ -2,23 +2,31 @@
 
 <ion-content class="ion-padding menu-content" fullscreen>
   <div class="menu-center-container">
-    <div class="menu-options-container">
-      <div class="menu-option-container" (click)="goToGenerator()">
-        <div class="circular-button">
-          <ion-icon name="qr-code-outline"></ion-icon>
+    
+    <!-- Sección superior: botones -->
+    <div class="menu-top-section">
+      <div class="menu-options-container">
+        <div class="menu-option-container" (click)="goToGenerator()">
+          <div class="circular-button">
+            <ion-icon name="qr-code-outline"></ion-icon>
+          </div>
+          <ion-label>Generar QR</ion-label>
         </div>
-        <ion-label>Generar QR</ion-label>
-      </div>
 
-      <div class="menu-option-container" (click)="goToScanner()">
-        <div class="circular-button">
-          <ion-icon name="scan-circle-outline"></ion-icon>
+        <div class="menu-option-container" (click)="goToScanner()">
+          <div class="circular-button">
+            <ion-icon name="scan-circle-outline"></ion-icon>
+          </div>
+          <ion-label>Escanear QR</ion-label>
         </div>
-        <ion-label>Escanear QR</ion-label>
       </div>
     </div>
 
-    <div id="ad-banner"></div>
+    <!-- Sección inferior: banner -->
+    <div class="menu-bottom-section">
+      <div id="ad-banner"></div>
+    </div>
+
   </div>
 </ion-content>
 

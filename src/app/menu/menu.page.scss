@@ -1,34 +1,40 @@
+/* Contenedor principal de la pantalla de menú */
 .menu-content {
   display: flex;
   flex-direction: column;
-  justify-content: center;
-  align-items: center;
   height: 100%;
+  width: 100%;
   --padding-top: 0;
   --padding-bottom: 0;
   --padding-start: 0;
   --padding-end: 0;
 }
 
+/* Dividimos la pantalla en dos secciones: superior e inferior */
 .menu-center-container {
   display: flex;
   flex-direction: column;
-  justify-content: flex-start;
-  align-items: center;
   height: 100%;
   width: 100%;
-  padding-top: 60px;
-  padding-bottom: 20px;
 }
 
+/* Sección superior: botones centrados en la mitad de la primera sección */
+.menu-top-section {
+  flex: 1; /* ocupa la mitad superior de la pantalla */
+  display: flex;
+  justify-content: center; /* horizontal */
+  align-items: center;     /* vertical */
+}
+
+/* Opciones centradas horizontalmente */
 .menu-options-container {
   display: flex;
   flex-direction: row;
   gap: 40px;
   z-index: 1;
-  margin-bottom: 100px;
 }
 
+/* Cada opción */
 .menu-option-container {
   display: flex;
   flex-direction: column;
@@ -37,6 +43,7 @@
   text-align: center;
 }
 
+/* Botones circulares */
 .circular-button {
   width: 80px;
   height: 80px;
@@ -64,9 +71,16 @@
   font-size: 14px;
 }
 
+/* Sección inferior para banner o contenido adicional */
+.menu-bottom-section {
+  flex: 1; /* ocupa la mitad inferior */
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  padding-top: 20px;
+}
+
 #ad-banner {
   width: 100%;
   height: 50px;
-  margin-top: 20px;
-  z-index: 0;
 }

@@ -25,7 +25,8 @@ export async function initializeAdMob(): Promise<void> {
       position: BannerAdPosition.BOTTOM_CENTER,
       isTesting: ModoDesarrollador,
     });
-
+    console.log("inicio la publicidad");
+    
   } catch (error: any) {
     console.error('AdMob error:', error);
     throw new Error('Error inicializando AdMob: ' + (error?.message || error));
@@ -57,7 +58,13 @@ export async function initializeAdMob(): Promise<void> {
         position: BannerAdPosition.CENTER,
         isTesting: ModoDesarrollador,
       });
+      console.log("se inicio banner");
     } catch (err) {
       console.error('Error mostrando banner:', err);
     }
+  }
+
+  //Ocultar banner 
+  export async function OcultarPublicidad(){
+    await AdMob.hideBanner();
   }

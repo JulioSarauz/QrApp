@@ -7,7 +7,7 @@ import { Share } from '@capacitor/share';
 import { Platform } from '@ionic/angular';
 import { Router } from '@angular/router';
 import { Clipboard } from '@capacitor/clipboard';
-import { initializeAdMob, showInterstitialAd } from 'src/componentes/AdMob/publicidad';
+import { initializeAdMob, OcultarPublicidad, showBannerMenu, showInterstitialAd } from 'src/componentes/AdMob/publicidad';
 
 @Component({
   selector: 'app-home',
@@ -15,7 +15,7 @@ import { initializeAdMob, showInterstitialAd } from 'src/componentes/AdMob/publi
   styleUrls: ['home.page.scss'],
   standalone: false,
 })
-export class HomePage implements OnInit, OnDestroy {
+export class HomePage implements OnInit {
 
   qrData: string = '';
   qrImage: string = '';
@@ -28,13 +28,8 @@ export class HomePage implements OnInit, OnDestroy {
   constructor(private platform: Platform, private router: Router) { }
 
   async ngOnInit() {
-    AdMob.hideBanner();
     await this.platform.ready();
     initializeAdMob();
-  }
-
-  ngOnDestroy() {
-    AdMob.hideBanner();
   }
   // ----------------- Portapapeles -----------------
  async pegarTexto() {
@@ -145,8 +140,18 @@ async copiarTexto() {
   }
 
   // ----------------- Navegación -----------------
-  goToMenu() { this.router.navigateByUrl('/menu'); }
-  goToGenerator() { this.router.navigateByUrl('/home'); }
-  goToScanner() { this.router.navigateByUrl('/scan'); }
+  goToMenu() { 
+    OcultarPublicidad();
+    showBannerMenu();
+    this.router.navigateByUrl('/menu'); 
+  }
+  goToGenerator() {    
+    OcultarPublicidad(); 
+    this.router.navigateByUrl('/home'); 
+  }
+  goToScanner() { 
+    OcultarPublicidad();
+    this.router.navigateByUrl('/scan'); 
+  }
 
 }

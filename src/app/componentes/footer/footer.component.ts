@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
+import { OcultarPublicidad } from 'src/componentes/AdMob/publicidad';
 
 @Component({
   selector: 'app-footer',
@@ -13,8 +14,17 @@ export class FooterComponent  implements OnInit {
 
   ngOnInit() {}
 
-  goToGenerator() { this.router.navigateByUrl('/home'); }
-  goToScanner() { this.router.navigateByUrl('/scan'); }
-  goToMenu() { this.router.navigateByUrl('/menu'); }
+  goToGenerator() { 
+     OcultarPublicidad();
+    this.router.navigateByUrl('/home'); 
+  }
+  goToScanner() { 
+     OcultarPublicidad();
+    this.router.navigateByUrl('/scan'); 
+  }
+  goToMenu() { 
+     OcultarPublicidad();
+    this.router.navigateByUrl('/menu'); 
+  }
 
 }
