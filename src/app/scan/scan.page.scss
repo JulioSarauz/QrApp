@@ -143,3 +143,26 @@ ion-content {
 .espacio{
   margin-bottom: 5rem;
 }
+
+.video-container {
+  position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.video-container video {
+  width: 100%;
+  height: auto;
+  border-radius: 8px;
+}
+
+.overlay-enfoque {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 60%; /* ajusta el tamaño del marco de enfoque */
+  opacity: 0.8; /* ligeramente transparente */
+  pointer-events: none; /* permite hacer clic en el video debajo */
+}

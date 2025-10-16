@@ -19,6 +19,7 @@ export class ScanPage implements OnInit, OnDestroy {
   private routerSubscription: Subscription = new Subscription();
   private codeReader:BrowserMultiFormatReader = new BrowserMultiFormatReader();
   ContenidoQrTexto:string = "";
+  MostrarEnfoque:boolean = false;
    @ViewChild('fileInput') fileInput!: ElementRef<HTMLInputElement>;
 
   constructor(private router: Router, private toastController: ToastController) { }
@@ -57,31 +58,33 @@ async mostrarError(errorMsg: string) {
     if (Capacitor.getPlatform() !== 'web') {
       await this.pedirPermisoCamara();
     }
-
     // Obtener referencia al elemento de video
     const videoElement = document.getElementById('video') as HTMLVideoElement;
     if (!videoElement) {
       await this.mostrarError('No se encontró el elemento de video.');
       return;
     }
-
     // Iniciar escaneo
     this.codeReader.decodeFromVideoDevice(null, 'video', async (result, err) => {
+      this.MostrarEnfoque = true;
       if (result) {
         console.log('QR detectado:', result.getText());
         this.ContenidoQrTexto = result.getText();
 
         // Detiene el escaneo después de detectar un código
         this.codeReader.reset();
+        this.MostrarEnfoque = false;
       }
 
       // Ignorar errores de no detección (ocurren constantemente mientras busca)
       if (err && !(err instanceof NotFoundException)) {
+        this.MostrarEnfoque = false;
         console.error('Error al leer QR:', err);
         await this.mostrarError(err?.message || JSON.stringify(err));
       }
     });
   } catch (error) {
+    this.MostrarEnfoque = false;
     console.error('Error general:', error);
     await this.mostrarError(JSON.stringify(error));
   }
