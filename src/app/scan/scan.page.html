@@ -1,38 +1,47 @@
 <app-cabecera></app-cabecera>
 
 <ion-content class="ion-padding" fullscreen>
- <ion-button expand="block" class="boton-generar BotonColor" (click)="goToMenu()">
+
+  <!-- Botón Volver al Menú -->
+  <ion-button expand="block" class="boton-generar BotonColor" (click)="goToMenu()">
     <ion-icon name="arrow-back-outline" slot="start"></ion-icon>
     Volver al Menú
   </ion-button>
 
-  <!-- Botón para iniciar escaneo -->
-  <ion-button expand="block" class="boton-generar BotonColor" (click)="EscanearQrCamara()">
-    <img src="assets/img/camera.png" alt="Logo QR" class="logo-qr" />
-     Iniciar Escaneo
-  </ion-button>
+  <!-- Contenedor para botones lado a lado -->
+  <div class="button-row">
+    <ion-button class="boton-generar BotonColor" (click)="EscanearQrCamara()">
+      <img src="assets/img/camera.png" alt="Logo QR" class="logo-qr" />
+      Iniciar Escaneo
+    </ion-button>
 
-      <!-- Video de la cámara -->
-  <div class="video-container">
-   <video id="video" width="100%" height="auto"></video>
+    <ion-button class="boton-generar BotonColor" (click)="cargarImagen($event)">
+      <img src="assets/img/inbox.png" alt="Logo Cargar" class="logo-qr" />
+      Cargar Imagen
+    </ion-button>
+    <!-- Input oculto para seleccionar archivo -->
+    <input type="file" accept="image/*" #fileInput hidden (change)="leerQrImagen($event)">
   </div>
 
-<div class="text-box" *ngIf="ContenidoQrTexto">
-  <!-- Si es enlace -->
-  <a *ngIf="esURL(ContenidoQrTexto)" [href]="ContenidoQrTexto" target="_blank">
-    {{ ContenidoQrTexto }}
-  </a>
+  <!-- Video de la cámara -->
+  <div class="video-container">
+    <video id="video" width="100%" height="auto"></video>
+  </div>
 
-  <!-- Si es texto normal -->
-  <p *ngIf="!esURL(ContenidoQrTexto)">
-    {{ ContenidoQrTexto }}
-  </p>
-</div>
-<ion-button expand="block" class="boton-generar BotonColor" (click)="copiarContenidoQr()"  *ngIf="ContenidoQrTexto">
+  <!-- Texto o link del QR -->
+  <div class="text-box" *ngIf="ContenidoQrTexto">
+    <a *ngIf="esURL(ContenidoQrTexto)" [href]="ContenidoQrTexto" target="_blank">
+      {{ ContenidoQrTexto }}
+    </a>
+    <p *ngIf="!esURL(ContenidoQrTexto)">
+      {{ ContenidoQrTexto }}
+    </p>
+  </div>
+
+  <!-- Botón copiar -->
+  <ion-button expand="block" class="boton-generar BotonColor" (click)="copiarContenidoQr()" *ngIf="ContenidoQrTexto">
     <img src="assets/img/files.png" alt="Logo QR" class="logo-qr" />
-     Copiar Texto
-</ion-button>
+    Copiar Texto
+  </ion-button>
 
-    
- 
 </ion-content>

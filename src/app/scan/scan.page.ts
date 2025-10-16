@@ -5,7 +5,8 @@ import { Subscription } from 'rxjs'; // Necesario para gestionar la suscripción
 import { filter } from 'rxjs/operators'; // Necesario para filtrar eventos
 import { BannerAdPosition } from '@capacitor-community/admob';
 import { BrowserMultiFormatReader } from '@zxing/browser';
-
+import { ViewChild, ElementRef } from '@angular/core';
+import jsQR from 'jsqr'; // Librería para leer QR desde imagen
 
 @Component({
   selector: 'app-scan',
@@ -17,6 +18,8 @@ export class ScanPage implements OnInit, OnDestroy {
   private routerSubscription: Subscription = new Subscription();
   private codeReader:BrowserMultiFormatReader = new BrowserMultiFormatReader();
   ContenidoQrTexto:string = "";
+   @ViewChild('fileInput') fileInput!: ElementRef<HTMLInputElement>;
+
   constructor(private router: Router) { }
   ngOnInit() {
 
@@ -69,6 +72,40 @@ export class ScanPage implements OnInit, OnDestroy {
       alert('❌ No se pudo copiar el texto');
     });
 }
+
+ // Abrir selector de archivo al hacer clic
+  cargarImagen(event: any) {
+    this.fileInput.nativeElement.click();
+  }
+
+  // Leer QR de la imagen seleccionada
+  leerQrImagen(event: any) {
+    const file = event.target.files[0];
+    if (!file) return;
+
+    const reader = new FileReader();
+    reader.onload = (e: any) => {
+      const img = new Image();
+      img.src = e.target.result;
+      img.onload = () => {
+        const canvas = document.createElement('canvas');
+        canvas.width = img.width;
+        canvas.height = img.height;
+        const ctx = canvas.getContext('2d');
+        if (!ctx) return;
+        ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+        const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+        const code = jsQR(imageData.data, canvas.width, canvas.height);
+        if (code) {
+          this.ContenidoQrTexto = code.data;
+          console.log('QR detectado:', this.ContenidoQrTexto);
+        } else {
+          alert('No se detectó ningún QR en la imagen');
+        }
+      };
+    };
+    reader.readAsDataURL(file);
+  }
   goToGenerator() {
     this.router.navigateByUrl('/home');
   }
