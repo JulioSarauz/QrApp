@@ -27,12 +27,11 @@
   <p *ngIf="!esURL(ContenidoQrTexto)">
     {{ ContenidoQrTexto }}
   </p>
-
-<ion-button expand="block" class="boton-generar BotonColor" (click)="EscanearQrCamara()">
+</div>
+<ion-button expand="block" class="boton-generar BotonColor" (click)="copiarContenidoQr()"  *ngIf="ContenidoQrTexto">
     <img src="assets/img/files.png" alt="Logo QR" class="logo-qr" />
      Copiar Texto
-  </ion-button>
-</div>
+</ion-button>
 
     
  

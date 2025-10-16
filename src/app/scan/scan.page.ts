@@ -52,6 +52,23 @@ export class ScanPage implements OnInit, OnDestroy {
       return false;
     }
   }
+
+  copiarContenidoQr(): void {
+  if (!this.ContenidoQrTexto) {
+    console.warn('No hay contenido para copiar');
+    return;
+  }
+
+  navigator.clipboard.writeText(this.ContenidoQrTexto)
+    .then(() => {
+      console.log('Contenido copiado al portapapeles');
+      alert('✅ Texto copiado al portapapeles');
+    })
+    .catch(err => {
+      console.error('Error al copiar:', err);
+      alert('❌ No se pudo copiar el texto');
+    });
+}
   goToGenerator() {
     this.router.navigateByUrl('/home');
   }
