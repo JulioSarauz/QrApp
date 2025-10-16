@@ -1,13 +1,14 @@
 import { Component, OnInit, OnDestroy } from '@angular/core'; // Importamos OnDestroy
 import { Router, NavigationEnd } from '@angular/router'; // Importamos NavigationEnd
-import { showBannerMenu } from 'src/componentes/AdMob/publicidad';
+import { showBannerMenu, showInterstitialAd } from 'src/componentes/AdMob/publicidad';
 import { Subscription } from 'rxjs'; // Necesario para gestionar la suscripción
 import { filter } from 'rxjs/operators'; // Necesario para filtrar eventos
 import { BannerAdPosition } from '@capacitor-community/admob';
-import { BrowserMultiFormatReader } from '@zxing/browser';
-import { ViewChild, ElementRef } from '@angular/core';
+import { BrowserMultiFormatReader, NotFoundException } from '@zxing/library';import { ViewChild, ElementRef } from '@angular/core';
 import jsQR from 'jsqr'; // Librería para leer QR desde imagen
-
+import { Camera, CameraResultType, CameraSource } from '@capacitor/camera';
+import { ToastController } from '@ionic/angular';
+import { Capacitor } from '@capacitor/core';
 @Component({
   selector: 'app-scan',
   templateUrl: './scan.page.html',
@@ -20,7 +21,7 @@ export class ScanPage implements OnInit, OnDestroy {
   ContenidoQrTexto:string = "";
    @ViewChild('fileInput') fileInput!: ElementRef<HTMLInputElement>;
 
-  constructor(private router: Router) { }
+  constructor(private router: Router, private toastController: ToastController) { }
   ngOnInit() {
 
     this.routerSubscription = this.router.events.pipe(
@@ -36,17 +37,60 @@ export class ScanPage implements OnInit, OnDestroy {
       this.routerSubscription.unsubscribe();
     }
   }
-
+async mostrarError(errorMsg: string) {
+    const toast = await this.toastController.create({
+      message: errorMsg,
+      duration: 3000,
+      color: 'danger',
+      position: 'bottom',
+    });
+    await toast.present();
+  }
   //Escanear el qr
-  EscanearQrCamara(){
-    this.codeReader.decodeFromVideoDevice(undefined, 'video', (result, err) => {
+ async  pedirPermisoCamara() {
+  const status = await Camera.requestPermissions({ permissions: ['camera'] });
+  console.log(status);
+}
+ async EscanearQrCamara() {
+  try {
+    // Si no está en web, pedir permiso de cámara
+    if (Capacitor.getPlatform() !== 'web') {
+      await this.pedirPermisoCamara();
+    }
+
+    // Obtener referencia al elemento de video
+    const videoElement = document.getElementById('video') as HTMLVideoElement;
+    if (!videoElement) {
+      await this.mostrarError('No se encontró el elemento de video.');
+      return;
+    }
+
+    // Iniciar escaneo
+    this.codeReader.decodeFromVideoDevice(null, 'video', async (result, err) => {
       if (result) {
-        console.log(result.getText());
+        console.log('QR detectado:', result.getText());
         this.ContenidoQrTexto = result.getText();
+
+        // Detiene el escaneo después de detectar un código
+        this.codeReader.reset();
+      }
+
+      // Ignorar errores de no detección (ocurren constantemente mientras busca)
+      if (err && !(err instanceof NotFoundException)) {
+        console.error('Error al leer QR:', err);
+        await this.mostrarError(err?.message || JSON.stringify(err));
       }
     });
+  } catch (error) {
+    console.error('Error general:', error);
+    await this.mostrarError(JSON.stringify(error));
   }
+}
 
+async NuevaSolicitudEscaneo(){
+  this.ContenidoQrTexto = "";
+  await showInterstitialAd();
+}
   esURL(texto: string): boolean {
     try {
       const url = new URL(texto);

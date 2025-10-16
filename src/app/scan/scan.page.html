@@ -10,12 +10,17 @@
 
   <!-- Contenedor para botones lado a lado -->
   <div class="button-row">
-    <ion-button class="boton-generar BotonColor" (click)="EscanearQrCamara()">
+    <ion-button class="boton-generar BotonColor2" (click)="EscanearQrCamara()" *ngIf="!ContenidoQrTexto">
       <img src="assets/img/camera.png" alt="Logo QR" class="logo-qr" />
       Iniciar Escaneo
     </ion-button>
 
-    <ion-button class="boton-generar BotonColor" (click)="cargarImagen($event)">
+    <ion-button class="boton-generar BotonColor4" (click)="NuevaSolicitudEscaneo()" *ngIf="ContenidoQrTexto">
+      <img src="assets/img/add.png" alt="Logo QR" class="logo-qr" />
+      Nuevo Escaneo
+    </ion-button>
+
+    <ion-button class="boton-generar BotonColor3" (click)="cargarImagen($event)">
       <img src="assets/img/inbox.png" alt="Logo Cargar" class="logo-qr" />
       Cargar Imagen
     </ion-button>
@@ -24,7 +29,7 @@
   </div>
 
   <!-- Video de la cámara -->
-  <div class="video-container">
+  <div class="video-container" *ngIf="!ContenidoQrTexto">
     <video id="video" width="100%" height="auto"></video>
   </div>
 
@@ -39,9 +44,10 @@
   </div>
 
   <!-- Botón copiar -->
-  <ion-button expand="block" class="boton-generar BotonColor" (click)="copiarContenidoQr()" *ngIf="ContenidoQrTexto">
+  <ion-button expand="block" class="boton-generar BotonColor espacio" (click)="copiarContenidoQr()" *ngIf="ContenidoQrTexto">
     <img src="assets/img/files.png" alt="Logo QR" class="logo-qr" />
     Copiar Texto
   </ion-button>
+
 
 </ion-content>

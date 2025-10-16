@@ -72,3 +72,74 @@ video {
 .button-row ion-button {
   flex: 1; /* que ocupen igual espacio */
 }
+
+
+ion-content {
+  --padding-bottom: 120px; /* espacio adicional inferior */
+}
+
+.video-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 20px;
+}
+
+.text-box {
+  margin-top: 20px;
+  text-align: center;
+  word-wrap: break-word;
+}
+
+.logo-qr {
+  width: 28px;
+  height: 28px;
+  margin-right: 10px;
+  border-radius: 5px;
+}
+
+.button-row {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 20px;
+}
+
+.boton-generar {
+  flex: 1;
+  margin: 0 5px;
+  height: 60px;
+  font-size: 18px;
+  border-radius: 12px;
+}
+
+.BotonColor {
+  background-color: #1b2236;
+  color: #fff;
+  --background: #1b2236;
+  --color: #fff;
+}
+
+.BotonColor2 {
+  background-color: #41bd5c;
+  color: #fff;
+  --background: #41bd5c;
+  --color: #fff;
+}
+
+.BotonColor3 {
+  background-color: #48244b;
+  color: #fff;
+  --background: #48244b;
+  --color: #fff;
+}
+
+.BotonColor4 {
+  background-color: #151652;
+  color: #fff;
+  --background: #151652;
+  --color: #fff;
+}
+
+.espacio{
+  margin-bottom: 5rem;
+}
