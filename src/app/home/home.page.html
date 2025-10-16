@@ -14,11 +14,11 @@
   <!-- Botones de acción (pegar / borrar) -->
   <div class="botones-acciones">
     <ion-button expand="block" color="success" (click)="pegarTexto()">
-      <ion-icon name="clipboard-outline" slot="icon-only"></ion-icon>
+      <img src="assets/img/paste.png" alt="Logo Cargar" class="logo-qr" />
     </ion-button>
     <ion-button expand="block" color="danger" (click)="limpiarCampos()">
-      <ion-icon name="trash" slot="icon-only"></ion-icon>
-    </ion-button>
+     <img src="assets/img/bin.png" alt="Logo Cargar" class="logo-qr" />
+     </ion-button>
   </div>
 
   <!-- Input QR -->
@@ -39,14 +39,16 @@
 
   <!-- Botón generar -->
   <ion-button expand="block" class="boton-generar sin-margen" (click)="generateQR()">
-    Generar QR
+     <img src="assets/img/innovation.png" alt="Logo Cargar" class="logo-qr" />
+      Generar QR
   </ion-button>
 
   <!-- Resultado -->
   <div *ngIf="qrImage" class="qr-generado">
     <img class="imgqr" [src]="qrImage" alt="QR Code" />
     <ion-button expand="block" class="boton-generar sin-margen" (click)="shareQR()">
-      Compartir QR
+        <img src="assets/img/share.png" alt="Logo Cargar" class="logo-qr" />
+        Compartir QR
     </ion-button>
   </div>
 
