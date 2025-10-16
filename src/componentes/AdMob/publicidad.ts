@@ -34,19 +34,27 @@ export async function initializeAdMob(): Promise<void> {
 }
 
 // LLAMAR PUBLICIDAD POR INTERSITITIAL
- export async function showInterstitialAd() {
+export async function showInterstitialAd(): Promise<void> {
+  return new Promise(async (resolve, reject) => {
     try {
       await AdMob.prepareInterstitial({
         adId: CodigoIntersticial,
         isTesting: ModoDesarrollador,
       });
 
-      (AdMob as any).addListener('interstitialAdDismissed', () => { });
+      // Escuchar cuando se cierre el anuncio
+      const listener = (AdMob as any).addListener('interstitialAdDismissed', () => {
+        listener.remove(); // limpia el listener
+        resolve(); // continúa después de cerrar el anuncio
+      });
+
       await AdMob.showInterstitial();
     } catch (err: any) {
       console.error('Interstitial error:', err);
+      resolve(); // si falla, continuar igual (no bloquear el flujo)
     }
-  }
+  });
+}
   //BANER GENERAR QR
   export async function showBannerCrear() {
     try {

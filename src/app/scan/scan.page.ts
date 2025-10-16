@@ -90,10 +90,11 @@ async mostrarError(errorMsg: string) {
   }
 }
 
-async NuevaSolicitudEscaneo(){
-  this.ContenidoQrTexto = "";
-  await showInterstitialAd();
-}
+
+  async NuevaSolicitudEscaneo() {
+    this.ContenidoQrTexto = "";
+    await showInterstitialAd();
+  }
   esURL(texto: string): boolean {
     try {
       const url = new URL(texto);

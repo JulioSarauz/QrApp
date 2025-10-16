@@ -110,28 +110,31 @@ async generateQR() {
     this.errorClipboard = null;
     this.errorGeneral = null;
   }
-  async shareQR() {
-    this.errorGeneral = null;
-    try {
-      await showInterstitialAd();
-      const base64 = this.qrImage.split(',')[1];
-      const fileName = `qr-code-${Date.now()}.png`;
-      const savedFile = await Filesystem.writeFile({
-        path: fileName,
-        data: base64,
-        directory: Directory.Cache,
-      });
-      await Share.share({
-        title: 'Mi Código QR',
-        text: 'QR generado por QR creador https://play.google.com/store/apps/details?id=com.neiruzlab.app&pcampaignid=web_share',
-        url: savedFile.uri,
-        dialogTitle: 'Compartir código QR con…',
-      });
-    } catch (err: any) {
-      console.error('Share QR error:', err);
-      this.errorGeneral = 'Error compartiendo QR: ' + (err?.message || err);
-    }
+ async shareQR() {
+  this.errorGeneral = null;
+  try {
+    // Esperar a que se muestre y cierre la publicidad antes de continuar
+    await showInterstitialAd();
+
+    const base64 = this.qrImage.split(',')[1];
+    const fileName = `qr-code-${Date.now()}.png`;
+    const savedFile = await Filesystem.writeFile({
+      path: fileName,
+      data: base64,
+      directory: Directory.Cache,
+    });
+
+    await Share.share({
+      title: 'Mi Código QR',
+      text: 'QR generado por QR Creador https://play.google.com/store/apps/details?id=com.neiruzlab.app&pcampaignid=web_share',
+      url: savedFile.uri,
+      dialogTitle: 'Compartir código QR con…',
+    });
+  } catch (err: any) {
+    console.error('Share QR error:', err);
+    this.errorGeneral = 'Error compartiendo QR: ' + (err?.message || err);
   }
+}
   async downloadQR() {
     this.errorGeneral = null;
     try {
