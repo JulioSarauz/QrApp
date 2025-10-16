@@ -4,6 +4,8 @@ import { showBannerMenu } from 'src/componentes/AdMob/publicidad';
 import { Subscription } from 'rxjs'; // Necesario para gestionar la suscripción
 import { filter } from 'rxjs/operators'; // Necesario para filtrar eventos
 import { BannerAdPosition } from '@capacitor-community/admob';
+import { BrowserMultiFormatReader } from '@zxing/browser';
+
 
 @Component({
   selector: 'app-scan',
@@ -13,6 +15,8 @@ import { BannerAdPosition } from '@capacitor-community/admob';
 })
 export class ScanPage implements OnInit, OnDestroy {
   private routerSubscription: Subscription = new Subscription();
+  private codeReader:BrowserMultiFormatReader = new BrowserMultiFormatReader();
+  ContenidoQrTexto:string = "";
   constructor(private router: Router) { }
   ngOnInit() {
 
@@ -30,6 +34,24 @@ export class ScanPage implements OnInit, OnDestroy {
     }
   }
 
+  //Escanear el qr
+  EscanearQrCamara(){
+    this.codeReader.decodeFromVideoDevice(undefined, 'video', (result, err) => {
+      if (result) {
+        console.log(result.getText());
+        this.ContenidoQrTexto = result.getText();
+      }
+    });
+  }
+
+  esURL(texto: string): boolean {
+    try {
+      const url = new URL(texto);
+      return true;
+    } catch (_) {
+      return false;
+    }
+  }
   goToGenerator() {
     this.router.navigateByUrl('/home');
   }

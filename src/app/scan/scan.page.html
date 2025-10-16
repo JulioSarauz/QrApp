@@ -1,18 +1,39 @@
-<ion-header>
-  <ion-toolbar color="light">
-    <div class="titulo-con-imagen">
-      <ion-title class="titulo-centrado">QR Generador</ion-title>
-    </div>
-  </ion-toolbar>
-</ion-header>
+<app-cabecera></app-cabecera>
 
 <ion-content class="ion-padding" fullscreen>
-  <!-- Botón para regresar al menú, estilo botón azul como Generar QR -->
-  <ion-button expand="block" class="boton-generar" style="background-color: #1b2236; margin-bottom: 20px;" (click)="goToMenu()">
+ <ion-button expand="block" class="boton-generar BotonColor" (click)="goToMenu()">
     <ion-icon name="arrow-back-outline" slot="start"></ion-icon>
     Volver al Menú
   </ion-button>
 
-  <!-- Contenedor de la cámara para escanear QR -->
-  <div id="camera-preview" style="width: 100%; height: calc(100% - 80px);"></div>
+  <!-- Botón para iniciar escaneo -->
+  <ion-button expand="block" class="boton-generar BotonColor" (click)="EscanearQrCamara()">
+    <img src="assets/img/camera.png" alt="Logo QR" class="logo-qr" />
+     Iniciar Escaneo
+  </ion-button>
+
+      <!-- Video de la cámara -->
+  <div class="video-container">
+   <video id="video" width="100%" height="auto"></video>
+  </div>
+
+<div class="text-box" *ngIf="ContenidoQrTexto">
+  <!-- Si es enlace -->
+  <a *ngIf="esURL(ContenidoQrTexto)" [href]="ContenidoQrTexto" target="_blank">
+    {{ ContenidoQrTexto }}
+  </a>
+
+  <!-- Si es texto normal -->
+  <p *ngIf="!esURL(ContenidoQrTexto)">
+    {{ ContenidoQrTexto }}
+  </p>
+
+<ion-button expand="block" class="boton-generar BotonColor" (click)="EscanearQrCamara()">
+    <img src="assets/img/files.png" alt="Logo QR" class="logo-qr" />
+     Copiar Texto
+  </ion-button>
+</div>
+
+    
+ 
 </ion-content>
