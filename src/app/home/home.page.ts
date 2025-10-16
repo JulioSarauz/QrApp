@@ -123,7 +123,7 @@ async generateQR() {
       });
       await Share.share({
         title: 'Mi Código QR',
-        text: 'QR generado por QR generador...',
+        text: 'QR generado por QR creador https://play.google.com/store/apps/details?id=com.neiruzlab.app&pcampaignid=web_share',
         url: savedFile.uri,
         dialogTitle: 'Compartir código QR con…',
       });
