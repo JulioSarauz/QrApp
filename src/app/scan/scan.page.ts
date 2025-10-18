@@ -6,7 +6,6 @@ import { filter } from 'rxjs/operators'; // Necesario para filtrar eventos
 import { BannerAdPosition } from '@capacitor-community/admob';
 import { BrowserMultiFormatReader, NotFoundException } from '@zxing/library';import { ViewChild, ElementRef } from '@angular/core';
 import jsQR from 'jsqr'; // Librería para leer QR desde imagen
-import { Camera, CameraResultType, CameraSource } from '@capacitor/camera';
 import { ToastController } from '@ionic/angular';
 import { Capacitor } from '@capacitor/core';
 import { BarcodeScanner } from '@capacitor-mlkit/barcode-scanning';

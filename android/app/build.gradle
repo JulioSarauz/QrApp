@@ -2,18 +2,19 @@ apply plugin: 'com.android.application'
 
 android {
   namespace "com.neiruzlab.app"
-  compileSdk rootProject.ext.compileSdkVersion
+  compileSdk 35
 
   defaultConfig {
-    applicationId "com.neiruzlab.app"
-    minSdkVersion rootProject.ext.minSdkVersion
-    targetSdkVersion rootProject.ext.targetSdkVersion
-    versionCode 20
+     applicationId "com.neiruzlab.app"
+    minSdkVersion 23
+    targetSdkVersion 35   // 👈 cambia esto
+    versionCode 24
     versionName "1.0.9"
     testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     aaptOptions {
       ignoreAssetsPattern '!.svn:!.git:!.ds_store:!*.scc:.*:!CVS:!thumbs.db:!picasa.ini:!*~'
     }
+
   }
 
   signingConfigs {
@@ -25,14 +26,19 @@ android {
     }
   }
 
-  buildTypes {
-    release {
-      signingConfig signingConfigs.release
-      minifyEnabled true
-      shrinkResources true  // 👍 OPCIONAL: elimina recursos no usados
-      proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+ buildTypes {
+        release {
+            signingConfig signingConfigs.release
+            minifyEnabled true
+            shrinkResources true
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+
+            ndk {
+                debugSymbolLevel 'FULL'
+            }
+        }
     }
-  }
+
 }
 
 

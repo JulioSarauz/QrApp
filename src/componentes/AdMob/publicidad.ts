@@ -1,6 +1,6 @@
 // publicidad.ts
 import { AdMob, BannerAdSize, BannerAdPosition } from '@capacitor-community/admob';
-export const ModoDesarrollador:boolean = true;
+export const ModoDesarrollador:boolean = false;
 export const CodigoBanner:string = 'ca-app-pub-3168726036346781/9507429127';
 export const CodigoIntersticial: string = 'ca-app-pub-3168726036346781/9858782916';
 
