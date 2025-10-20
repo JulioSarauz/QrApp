@@ -1,19 +1,28 @@
-<ion-footer class="ion-no-border">
+<ion-content class="main-content" fullscreen>
+  <!-- Tu contenido va aquí -->
+  <div class="contenido">
+    <h2>Ejemplo de contenido</h2>
+    <p>Texto o botones que deben quedar visibles...</p>
+  </div>
+</ion-content>
+
+<!-- Footer fijo sobre el banner -->
+<ion-footer class="custom-footer ion-no-border">
   <ion-toolbar>
     <ion-tabs>
       <ion-tab-bar class="custom-tab-bar">
-        <ion-tab-button (click)="goToScanner()" class="tab-button-left">
+        <ion-tab-button (click)="goToScanner()">
           <ion-icon name="scan-circle-outline"></ion-icon>
           <ion-label>Escanear</ion-label>
         </ion-tab-button>
 
-        <ion-tab-button (click)="goToMenu()" class="center-button-container">
+        <ion-tab-button (click)="goToMenu()">
           <div class="center-button-circle">
             <img src="assets/img/qrlogo.jpg" alt="Logo" class="center-logo" />
           </div>
         </ion-tab-button>
 
-        <ion-tab-button (click)="goToGenerator()" class="tab-button-right">
+        <ion-tab-button (click)="goToGenerator()">
           <ion-icon name="qr-code-outline"></ion-icon>
           <ion-label>Generador</ion-label>
         </ion-tab-button>
@@ -21,3 +30,6 @@
     </ion-tabs>
   </ion-toolbar>
 </ion-footer>
+
+<!-- Contenedor del banner AdMob -->
+<div class="admob-banner-container"></div>

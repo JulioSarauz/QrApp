@@ -97,7 +97,8 @@ async generateQR() {
       message: errorMsg,
       duration: 3000,
       color: 'danger',
-      position: 'bottom',
+      position: 'middle', 
+      cssClass: 'toast-error'
     });
     await toast.present();
   }

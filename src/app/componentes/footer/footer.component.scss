@@ -1,0 +1,67 @@
+/* === Contenido principal === */
+.main-content {
+  --background: #111;
+  padding-bottom: 180px; /* espacio para footer + banner */
+  box-sizing: border-box;
+  overflow-y: auto;
+}
+
+/* === Footer flotante === */
+.custom-footer {
+  position: fixed;
+  bottom: 60px; /* altura exacta del banner */
+  left: 0;
+  width: 100%;
+  z-index: 1000;
+}
+
+.custom-footer ion-toolbar {
+  --background: linear-gradient(135deg, #0d0d0d, #2c2c2c);
+  --color: #f5f5f5;
+}
+
+/* === Estilo de la barra de pestañas === */
+.custom-tab-bar {
+  --background: transparent;
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+}
+
+ion-tab-button {
+  color: #f5f5f5;
+}
+
+ion-icon {
+  font-size: 1.4rem;
+}
+
+.center-button-circle {
+  background-color: #1e1e1e;
+  border-radius: 50%;
+  padding: 6px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.center-logo {
+  width: 2.5em;
+  height: 2.5em;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+/* === Banner AdMob === */
+.admob-banner-container {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 60px; /* alto del banner */
+  background: linear-gradient(135deg, #0d0d0d, #2c2c2c);
+  z-index: 1100; /* sobre todo */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}

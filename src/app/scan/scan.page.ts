@@ -44,52 +44,11 @@ async mostrarError(errorMsg: string) {
       message: errorMsg,
       duration: 3000,
       color: 'danger',
-      position: 'bottom',
+      position: 'middle',
+      cssClass: 'toast-error', 
     });
     await toast.present();
   }
-  //Escanear el qr
-//  async  pedirPermisoCamara() {
-//   const status = await Camera.requestPermissions({ permissions: ['camera'] });
-//   console.log(status);
-// }
-//  async EscanearQrCamara() {
-//   try {
-//     // Si no está en web, pedir permiso de cámara
-//     if (Capacitor.getPlatform() !== 'web') {
-//       await this.pedirPermisoCamara();
-//     }
-//     // Obtener referencia al elemento de video
-//     const videoElement = document.getElementById('video') as HTMLVideoElement;
-//     if (!videoElement) {
-//       await this.mostrarError('No se encontró el elemento de video.');
-//       return;
-//     }
-//     // Iniciar escaneo
-//     this.codeReader.decodeFromVideoDevice(null, 'video', async (result, err) => {
-//       this.MostrarEnfoque = true;
-//       if (result) {
-//         console.log('QR detectado:', result.getText());
-//         this.ContenidoQrTexto = result.getText();
-
-//         // Detiene el escaneo después de detectar un código
-//         this.codeReader.reset();
-//         this.MostrarEnfoque = false;
-//       }
-
-//       // Ignorar errores de no detección (ocurren constantemente mientras busca)
-//       if (err && !(err instanceof NotFoundException)) {
-//         this.MostrarEnfoque = false;
-//         console.error('Error al leer QR:', err);
-//         await this.mostrarError(err?.message || JSON.stringify(err));
-//       }
-//     });
-//   } catch (error) {
-//     this.MostrarEnfoque = false;
-//     console.error('Error general:', error);
-//     await this.mostrarError(JSON.stringify(error));
-//   }
-// }
 async pedirPermisoCamara() {
     const { camera } = await BarcodeScanner.requestPermissions();
     return camera === 'granted';

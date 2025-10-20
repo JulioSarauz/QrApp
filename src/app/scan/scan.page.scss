@@ -1,109 +1,11 @@
-.boton-generar {
-  height: 60px;
-  font-size: 18px;
-  border-radius: 12px;
-  background-color: #1b2236; /* azul vibrante */
-  color: #ffffff;            /* texto blanco */
-  --background: #1b2236;     /* también necesario para Ionic */
-  --color: #ffffff;
-}
-
-.swal2-container {
-  z-index: 99999 !important;
-}
-
-/* Opcional: si quieres centrar o dar estilo al video */
-.video-container {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  margin-top: 20px;
-}
-
-video {
-  border-radius: 8px;
-  max-width: 100%;
-  height: auto;
-}
-
-.video-container {
-  width: 100%;
-  height: auto;
-  display: flex;
-  justify-content: center;
-  margin-bottom: 20px;
-}
-
-video {
-  border-radius: 12px;
-  max-width: 100%;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.2);
-}
-
-.BotonColor{
-  background-color: #1b2236; margin-bottom: 20px;
-}
-.logo-qr {
-  height: 2em;     
-  width: 2em;      
-  object-fit: cover;
-  margin-right: 1rem;
-}
-
-.text-box {
-  background-color: #f0f4f8; /* fondo suave y agradable */
-  color: #1a1a1a;           /* letras oscuras para buen contraste */
-  padding: 20px;
-  border-radius: 12px;       /* bordes redondeados */
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* sombra sutil */
-  max-width: 500px;          /* ancho máximo */
-  margin: 20px auto;         /* centrado horizontal */
-  font-family: Arial, sans-serif;
-  line-height: 1.6;          /* mejora la legibilidad */
-}
-
-.button-row {
-  display: flex;
-  justify-content: space-between;
-  gap: 10px;
-  margin-top: 15px;
-}
-
-.button-row ion-button {
-  flex: 1; /* que ocupen igual espacio */
-}
-
-
 ion-content {
-  --padding-bottom: 120px; /* espacio adicional inferior */
+  padding: 8px !important;
+  box-sizing: border-box;
+  overflow-y: auto;
+  --padding-bottom: 220px; /* espacio para footer + banner + margen extra */
 }
 
-.video-container {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  margin-top: 20px;
-}
-
-.text-box {
-  margin-top: 20px;
-  text-align: center;
-  word-wrap: break-word;
-}
-
-.logo-qr {
-  width: 28px;
-  height: 28px;
-  margin-right: 10px;
-  border-radius: 5px;
-}
-
-.button-row {
-  display: flex;
-  justify-content: space-between;
-  margin-bottom: 20px;
-}
-
+/* --- Botones principales --- */
 .boton-generar {
   flex: 1;
   margin: 0 5px;
@@ -112,49 +14,67 @@ ion-content {
   border-radius: 12px;
 }
 
-.BotonColor {
-  background-color: #1b2236;
-  color: #fff;
-  --background: #1b2236;
-  --color: #fff;
+/* Colores de botones */
+.BotonColor { background-color: #1b2236; color: #fff; --background: #1b2236; --color: #fff; }
+.BotonColor2 { background-color: #41bd5c; color: #fff; --background: #41bd5c; --color: #fff; }
+.BotonColor3 { background-color: #48244b; color: #fff; --background: #48244b; --color: #fff; }
+.BotonColor4 { background-color: #151652; color: #fff; --background: #151652; --color: #fff; }
+
+/* Botones fila */
+.button-row {
+  display: flex;
+  justify-content: space-between;
+  gap: 10px;
+  margin-top: 15px;
+  margin-bottom: 20px;
 }
 
-.BotonColor2 {
-  background-color: #41bd5c;
-  color: #fff;
-  --background: #41bd5c;
-  --color: #fff;
+.button-row ion-button {
+  flex: 1; /* que ocupen igual espacio */
 }
 
-.BotonColor3 {
-  background-color: #48244b;
-  color: #fff;
-  --background: #48244b;
-  --color: #fff;
+/* Text box resultado QR */
+.text-box {
+  background-color: #f0f4f8;
+  color: #1a1a1a;
+  padding: 20px;
+  border-radius: 12px;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+  max-width: 500px;
+  margin: 20px auto;
+  font-family: Arial, sans-serif;
+  line-height: 1.6;
+  text-align: center;
+  word-wrap: break-word;
 }
 
-.BotonColor4 {
-  background-color: #151652;
-  color: #fff;
-  --background: #151652;
-  --color: #fff;
+/* Botón de copiar contenido QR */
+.espacio {
+  margin-bottom: 5rem; /* deja espacio para que no quede tapado por footer/banner */
 }
 
-.espacio{
-  margin-bottom: 5rem;
+/* Logos dentro de botones */
+.logo-qr {
+  width: 28px;
+  height: 28px;
+  margin-right: 10px;
+  border-radius: 5px;
 }
 
+/* Video / cámara */
 .video-container {
   position: relative;
   display: flex;
   justify-content: center;
   align-items: center;
+  margin-top: 20px;
 }
 
 .video-container video {
   width: 100%;
   height: auto;
   border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.2);
 }
 
 .overlay-enfoque {
@@ -162,7 +82,14 @@ ion-content {
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-  width: 60%; /* ajusta el tamaño del marco de enfoque */
-  opacity: 0.8; /* ligeramente transparente */
-  pointer-events: none; /* permite hacer clic en el video debajo */
+  width: 60%;
+  opacity: 0.8;
+  pointer-events: none;
+}
+.toast-error {
+  --background: rgba(0,0,0,0.85);
+  --color: #fff;
+  --box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+  border-radius: 12px;
+  text-align: center;
 }

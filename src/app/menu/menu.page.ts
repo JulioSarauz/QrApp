@@ -21,7 +21,7 @@ export class MenuPage implements OnInit, OnDestroy {
       filter((event) => event instanceof NavigationEnd)
     ).subscribe((event: NavigationEnd) => {
       if (event.urlAfterRedirects.includes('/menu')) {
-        showBannerMenu(BannerAdPosition.CENTER);
+        showBannerMenu(BannerAdPosition.BOTTOM_CENTER);
       }
     });
   }

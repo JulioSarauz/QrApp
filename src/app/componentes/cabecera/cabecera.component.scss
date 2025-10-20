@@ -1,20 +1,25 @@
+.toolbar-degradado {
+  --background: linear-gradient(135deg, #0d0d0d, #2c2c2c);
+  --color: #f5f5f5;
+}
+
 .header-content {
   display: flex;
-  align-items: center;     /* centra verticalmente */
-  justify-content: center; /* centra todo horizontalmente */
-  gap: 10px;               /* espacio entre imagen y texto */
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
   width: 100%;
 }
 
 .logo-qr {
-  height: 2em;        /* iguala aproximadamente la altura del texto */
-  width: 2em;         /* puedes ajustar según el diseño */
-  border-radius: 50%; /* bordes redondeados tipo círculo */
+  height: 2em;
+  width: 2em;
+  border-radius: 50%;
   object-fit: cover;
 }
 
 .titulo-centrado {
   font-size: 1.5rem;
   font-weight: bold;
-  color: #f5f5f5;    /* contraste con fondo */
+  color: #f5f5f5;
 }
