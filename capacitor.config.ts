@@ -14,6 +14,17 @@ const config: CapacitorConfig = {
       SplashScreen: 'screen',
       SplashScreenDelay: '3000'
     }
+  },
+  plugins: {
+    EdgeToEdge: {
+      backgroundColor: '#ffffff',
+    },
+    Keyboard: {
+      resizeOnFullScreen: false, 
+    },
+  },
+  android: {
+    adjustMarginsForEdgeToEdge: 'force',
   }
 };
 

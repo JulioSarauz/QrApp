@@ -7,8 +7,8 @@ android {
   defaultConfig {
      applicationId "com.neiruzlab.app"
     minSdkVersion 23
-    targetSdkVersion 35   // 👈 cambia esto
-    versionCode 24
+    targetSdkVersion 35
+    versionCode 26
     versionName "1.0.9"
     testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     aaptOptions {
