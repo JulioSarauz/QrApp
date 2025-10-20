@@ -1,14 +1,23 @@
 apply plugin: 'com.android.application'
 
+// El bloque 'ext' fue eliminado, ya que estas versiones ahora están hardcodeadas en 'dependencies'
+// o se gestionan por 'variables.gradle' para evitar conflictos.
+
 android {
   namespace "com.neiruzlab.app"
   compileSdk 35
+
+  sourceSets {
+    main {
+      jniLibs.srcDirs = ['libs'] // Busca librerías nativas en la carpeta 'libs'
+    }
+  }
 
   defaultConfig {
     applicationId "com.neiruzlab.app"
     minSdkVersion 23
     targetSdkVersion 35
-    versionCode 27
+    versionCode 33 // Incrementado a 33 para la próxima subida
     versionName "1.0.9"
     testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     aaptOptions {
@@ -16,15 +25,12 @@ android {
     }
   }
 
-  // >>> INICIO: Solución para la alineación de 16KB <<<
+  // CONFIGURACIÓN FORZADA DE ALINEACIÓN DE 16KB (CRÍTICA)
   packagingOptions {
     jniLibs {
-      // Esta línea asegura que las librerías nativas (.so) se alineen a 16KB,
-      // lo que mejora el rendimiento de carga y elimina la advertencia de Google Play.
-      useLegacyPackaging = false
+      useLegacyPackaging = false // Soluciona la advertencia de 16KB de Play Console
     }
   }
-  // >>> FIN: Solución para la alineación de 16KB <<<
 
   signingConfigs {
     release {
@@ -51,22 +57,46 @@ android {
 }
 
 repositories {
-  flatDir{
-    dirs '../capacitor-cordova-android-plugins/src/main/libs', 'libs'
-  }
+  google()
+  mavenCentral()
 }
+
 
 dependencies {
   implementation fileTree(include: ['*.jar'], dir: 'libs')
-  implementation "androidx.appcompat:appcompat:$androidxAppCompatVersion"
-  implementation "androidx.coordinatorlayout:coordinatorlayout:$androidxCoordinatorLayoutVersion"
+
+  // Versiones actualizadas (hardcodeadas para asegurar que se usan)
+  implementation "androidx.appcompat:appcompat:1.7.1"
+  implementation "androidx.coordinatorlayout:coordinatorlayout:1.3.0"
+
+  // Dependencias usando variables
   implementation "androidx.core:core-splashscreen:$coreSplashScreenVersion"
   implementation project(':capacitor-android')
   testImplementation "junit:junit:$junitVersion"
-  androidTestImplementation "androidx.test.ext:junit:$androidxJunitVersion"
-  androidTestImplementation "androidx.test.espresso:espresso-core:$androidxEspressoCoreVersion"
+
+  // Versiones actualizadas (hardcodeadas para asegurar que se usan)
+  androidTestImplementation "androidx.test.ext:junit:1.3.0"
+  androidTestImplementation "androidx.test.espresso:espresso-core:3.7.0"
+
   implementation project(':capacitor-cordova-android-plugins')
-  implementation ('com.google.android.gms:play-services-ads:22.6.0')
+
+  // Versión actualizada de Google Play Services Ads
+  implementation ('com.google.android.gms:play-services-ads:24.7.0')
 }
 
 apply from: 'capacitor.build.gradle'
+
+// ⚠️ ÚLTIMO PASO PARA CORREGIR flatDir ⚠️
+// El problema persiste porque un PLUGIN externo inyecta 'flatDir' después de este archivo.
+// LA CORRECCIÓN FINAL DEBE IR EN EL ARCHIVO android/build.gradle (nivel raíz).
+
+// Si el error persiste, mueve el siguiente bloque (comentado) al final del archivo
+// android/build.gradle (el que está en la carpeta raíz 'android/'):
+/*
+allprojects {
+    repositories {
+        google()
+        mavenCentral()
+    }
+}
+*/
