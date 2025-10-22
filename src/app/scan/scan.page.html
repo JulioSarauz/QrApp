@@ -30,9 +30,12 @@
 
 
 <div *ngIf="MostrarEnfoque" class="scanner-container">
-        <video #videoElement autoplay playsinline class="scanner-video"></video>
+        <video #videoElement autoplay playsinline class="scanner-video" [controls]="false" preload="auto"></video>
         <canvas #canvasElement hidden></canvas>
-        <div class="overlay"></div> </div>
+        <div class="overlay">
+            <img src="assets/img/enfoque.png" alt="Marco de Enfoque QR" class="focus-image" />
+        </div>
+    </div>
    
 
   <div class="text-box" *ngIf="ContenidoQrTexto">

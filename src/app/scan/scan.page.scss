@@ -2,10 +2,8 @@ ion-content {
   padding: 8px !important;
   box-sizing: border-box;
   overflow-y: auto;
-  --padding-bottom: 220px; /* espacio para footer + banner + margen extra */
+  --padding-bottom: 220px; 
 }
-
-/* --- Botones principales --- */
 .boton-generar {
   flex: 1;
   margin: 0 5px;
@@ -13,14 +11,10 @@ ion-content {
   font-size: 18px;
   border-radius: 12px;
 }
-
-/* Colores de botones */
 .BotonColor { background-color: #1b2236; color: #fff; --background: #1b2236; --color: #fff; }
 .BotonColor2 { background-color: #41bd5c; color: #fff; --background: #41bd5c; --color: #fff; }
 .BotonColor3 { background-color: #48244b; color: #fff; --background: #48244b; --color: #fff; }
 .BotonColor4 { background-color: #151652; color: #fff; --background: #151652; --color: #fff; }
-
-/* Botones fila */
 .button-row {
   display: flex;
   justify-content: space-between;
@@ -28,12 +22,9 @@ ion-content {
   margin-top: 15px;
   margin-bottom: 20px;
 }
-
 .button-row ion-button {
-  flex: 1; /* que ocupen igual espacio */
+  flex: 1; 
 }
-
-/* Text box resultado QR */
 .text-box {
   background-color: #f0f4f8;
   color: #1a1a1a;
@@ -47,21 +38,15 @@ ion-content {
   text-align: center;
   word-wrap: break-word;
 }
-
-/* Botón de copiar contenido QR */
 .espacio {
-  margin-bottom: 5rem; /* deja espacio para que no quede tapado por footer/banner */
+  margin-bottom: 5rem; 
 }
-
-/* Logos dentro de botones */
 .logo-qr {
   width: 28px;
   height: 28px;
   margin-right: 10px;
   border-radius: 5px;
 }
-
-/* Video / cámara */
 .video-container {
   position: relative;
   display: flex;
@@ -69,14 +54,12 @@ ion-content {
   align-items: center;
   margin-top: 20px;
 }
-
 .video-container video {
   width: 100%;
   height: auto;
   border-radius: 8px;
   box-shadow: 0 2px 8px rgba(0,0,0,0.2);
 }
-
 .overlay-enfoque {
   position: absolute;
   top: 50%;
@@ -93,34 +76,41 @@ ion-content {
   border-radius: 12px;
   text-align: center;
 }
-
-/* En scan.page.scss */
-
 .scanner-container {
-    position: fixed; /* O 'absolute' dentro de ion-content si no tienes fullscreen */
+    position: fixed;
     top: 0;
     left: 0;
     width: 100%;
     height: 100%;
-    z-index: 1000; /* Asegura que esté por encima de otros elementos */
+    z-index: 9999; 
     background-color: black;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
-
 .scanner-video {
     width: 100%;
     height: 100%;
-    object-fit: cover; /* Ajusta la transmisión al tamaño del contenedor */
+    object-fit: cover; 
+    display: block; 
 }
-
-/* Opcional: Si quieres un marco de escaneo (solo visual) */
 .overlay {
     position: absolute;
     top: 0;
     left: 0;
     width: 100%;
     height: 100%;
-    box-shadow: 0 0 0 100vw rgba(0, 0, 0, 0.5); /* Oscurece el área fuera del centro */
-    border: 4px solid white; /* Simula el marco central */
-    /* Ajusta este tamaño para centrar tu área de escaneo preferida */
-    clip-path: polygon(0 0, 0 100%, 100% 100%, 100% 0);
+    display: flex; 
+    justify-content: center;
+    align-items: center;
+    pointer-events: none; 
+}
+.focus-image {
+    width: 80%; 
+    max-width: 300px; 
+    height: auto;
+    opacity: 0.9; 
+}
+.button-row {
+    z-index: 100; 
 }
