@@ -93,3 +93,34 @@ ion-content {
   border-radius: 12px;
   text-align: center;
 }
+
+/* En scan.page.scss */
+
+.scanner-container {
+    position: fixed; /* O 'absolute' dentro de ion-content si no tienes fullscreen */
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 1000; /* Asegura que esté por encima de otros elementos */
+    background-color: black;
+}
+
+.scanner-video {
+    width: 100%;
+    height: 100%;
+    object-fit: cover; /* Ajusta la transmisión al tamaño del contenedor */
+}
+
+/* Opcional: Si quieres un marco de escaneo (solo visual) */
+.overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    box-shadow: 0 0 0 100vw rgba(0, 0, 0, 0.5); /* Oscurece el área fuera del centro */
+    border: 4px solid white; /* Simula el marco central */
+    /* Ajusta este tamaño para centrar tu área de escaneo preferida */
+    clip-path: polygon(0 0, 0 100%, 100% 100%, 100% 0);
+}

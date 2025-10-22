@@ -10,7 +10,7 @@
 
 
   <div class="button-row">
-    <ion-button class="boton-generar BotonColor2" (click)="EscanearQrCamara()" *ngIf="!ContenidoQrTexto">
+    <ion-button class="boton-generar BotonColor2" (click)="EscanearQrEnVivo()" *ngIf="!ContenidoQrTexto">
       <img src="assets/img/camera.png" alt="Logo QR" class="logo-qr" />
       Iniciar Escaneo
     </ion-button>
@@ -29,6 +29,11 @@
   </div>
 
 
+<div *ngIf="MostrarEnfoque" class="scanner-container">
+        <video #videoElement autoplay playsinline class="scanner-video"></video>
+        <canvas #canvasElement hidden></canvas>
+        <div class="overlay"></div> </div>
+   
 
   <div class="text-box" *ngIf="ContenidoQrTexto">
     <a *ngIf="esURL(ContenidoQrTexto)" [href]="ContenidoQrTexto" target="_blank">
