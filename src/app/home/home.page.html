@@ -2,7 +2,6 @@
 
 <ion-content id="main-content" class="ion-padding">
 
-  <!-- Botón de regresar al menú -->
   <ion-button 
     expand="block"
     class="boton-generar sin-margen"
@@ -11,7 +10,6 @@
     Regresar al Menú
   </ion-button>
 
-  <!-- Botones de acción (pegar / borrar) -->
   <div class="botones-acciones">
     <ion-button expand="block" color="success" (click)="pegarTexto()">
       <img src="assets/img/paste.png" alt="Logo Cargar" class="logo-qr" />
@@ -21,7 +19,6 @@
      </ion-button>
   </div>
 
-  <!-- Input QR -->
   <div class="input-container sin-margen">
     <ion-label position="stacked" color="danger">
       Escribe un texto o pega un enlace
@@ -29,21 +26,41 @@
     <ion-input [(ngModel)]="qrData" style="color: black;"></ion-input>
   </div>
 
-  <!-- Colores -->
   <ion-item class="compact-item">
-    <ion-label color="dark">Color</ion-label>
+    <ion-label color="dark">Color QR</ion-label>
     <ion-input type="color" [(ngModel)]="colorDark" style="max-width: 60px;"></ion-input>
-    <ion-label color="medium">Fondo</ion-label>
-    <ion-input type="color" [(ngModel)]="colorLight" style="max-width: 60px;"></ion-input>
+  </ion-item>
+  
+  <ion-item class="compact-item">
+    <ion-label color="medium">Fondo RGB</ion-label>
+    <ion-input 
+        type="color" 
+        [(ngModel)]="colorLightHex" 
+        (ngModelChange)="updateColorLight()" 
+        style="max-width: 60px;">
+    </ion-input>
+  </ion-item>
+  
+  <ion-item class="compact-item">
+    <ion-label color="medium">Transparencia</ion-label>
+    <ion-range 
+        aria-label="Transparencia" 
+        min="0" 
+        max="100" 
+        step="1" 
+        pin="true" 
+        [(ngModel)]="alphaLight" 
+        (ionChange)="updateColorLight()">
+        <ion-label slot="start">0%</ion-label>
+        <ion-label slot="end">100%</ion-label>
+    </ion-range>
   </ion-item>
 
-  <!-- Botón generar -->
   <ion-button expand="block" class="boton-generar sin-margen" (click)="generateQR()">
-     <img src="assets/img/innovation.png" alt="Logo Cargar" class="logo-qr" />
+      <img src="assets/img/innovation.png" alt="Logo Cargar" class="logo-qr" />
       Generar QR
   </ion-button>
 
-  <!-- Resultado -->
   <div *ngIf="qrImage" class="qr-generado">
     <img class="imgqr" [src]="qrImage" alt="QR Code" />
     <ion-button expand="block" class="boton-generar sin-margen" (click)="shareQR()">
