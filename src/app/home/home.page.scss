@@ -235,3 +235,27 @@ ion-icon {
 
 
 
+/* AÑADE ESTO AL FINAL DE TU home.page.scss */
+
+// Estilo para el componente ion-loading
+.custom-loading-class {
+    // Opacidad de fondo
+    --backdrop-opacity: 0.5;
+    
+    // Color del spinner y del texto
+    --spinner-color: var(--ion-color-primary, #1b2236); // Usa el color principal de tu app
+    color: var(--ion-color-dark, #1b2236);
+    
+    // Contenedor de la carga (la caja blanca que contiene el spinner y el mensaje)
+    .loading-wrapper {
+        border-radius: 15px; // Esquinas redondeadas
+        padding: 20px 30px; // Más espacio interno
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2); // Sombra sutil
+    }
+    
+    // Asegura que el texto del mensaje sea legible y visible
+    .loading-content {
+        font-weight: 600;
+        font-size: 1.1em;
+    }
+}
