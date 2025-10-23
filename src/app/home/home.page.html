@@ -59,6 +59,22 @@
     </ion-range>
   </ion-item>
 
+ <!-- Imagen de fondo -->
+  <ion-item class="compact-item">
+      <ion-label color="medium">
+        Imagen de Fondo
+        <p class="file-name-display" [class.file-loaded]="fileName">
+          {{ fileName ? fileName : '(Opcional: Cargar imagen)' }}
+        </p>
+      </ion-label>
+      <ion-button slot="end" size="small" (click)="selectBackgroundImage()">
+        <ion-icon name="image" slot="icon-only"></ion-icon>
+      </ion-button>
+      
+      <ion-button *ngIf="backgroundImage" slot="end" size="small" color="danger" (click)="removeBackgroundImage()">
+        <ion-icon name="close-circle" slot="icon-only"></ion-icon>
+      </ion-button>
+  </ion-item>
   <!-- Carrusel infinito -->
 <div 
   class="carousel-container"
@@ -75,24 +91,6 @@
     </div>
   </div>
 </div>
-
-
-  <ion-item class="compact-item">
-      <ion-label color="medium">
-        Imagen de Fondo
-        <p class="file-name-display" [class.file-loaded]="fileName">
-          {{ fileName ? fileName : '(Opcional: Cargar imagen)' }}
-        </p>
-      </ion-label>
-      <ion-button slot="end" size="small" (click)="selectBackgroundImage()">
-        <ion-icon name="image" slot="icon-only"></ion-icon>
-      </ion-button>
-      
-      <ion-button *ngIf="backgroundImage" slot="end" size="small" color="danger" (click)="removeBackgroundImage()">
-        <ion-icon name="close-circle" slot="icon-only"></ion-icon>
-      </ion-button>
-  </ion-item>
-
   <ion-button expand="block" class="boton-generar sin-margen" (click)="generateQR()">
       <img src="assets/img/innovation.png" alt="Logo Cargar" class="logo-qr" />
       Generar QR

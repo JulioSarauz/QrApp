@@ -35,11 +35,11 @@ export class HomePage implements OnInit, OnDestroy {
   errorClipboard: string | null = null;
   errorGeneral: string | null = null;
   images: string[] = [
-  'assets/img/add.png',
-  'assets/img/inbox.png',
-  'assets/img/paste.png',
-  'assets/img/qrlogo.png',
-  'assets/img/demo5.jpg'
+  'assets/img/demo5.png',
+  'assets/img/demo4.png',
+  'assets/img/demo3.png',
+  'assets/img/demo2.png',
+  'assets/img/demo1.png'
 ];
   duplicatedImages: string[] = [];
   carouselTransform = 'translateX(0px)';
@@ -348,7 +348,7 @@ export class HomePage implements OnInit, OnDestroy {
   }
 
   onImageClick(img: string) {
-    this.isPaused = !this.isPaused; // pausa o reanuda con clic
-    console.log('Imagen seleccionada:', img);
+    this.isPaused = !this.isPaused;
+    this.backgroundImage = img;
   }
 }
