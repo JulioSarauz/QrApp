@@ -35,6 +35,8 @@ export class HomePage implements OnInit, OnDestroy {
   errorClipboard: string | null = null;
   errorGeneral: string | null = null;
   images: string[] = [
+  'assets/img/demo7.png',
+  'assets/img/demo6.png',
   'assets/img/demo5.png',
   'assets/img/demo4.png',
   'assets/img/demo3.png',
@@ -351,4 +353,15 @@ export class HomePage implements OnInit, OnDestroy {
     this.isPaused = !this.isPaused;
     this.backgroundImage = img;
   }
+
+
+
+
+
+
+
+
+  //manipulacion qr
+
+  
 }

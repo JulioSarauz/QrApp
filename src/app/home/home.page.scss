@@ -197,7 +197,7 @@ ion-icon {
   width: 100%;
   overflow: hidden;
   position: relative;
-  height: 80px;
+  height: 50px;
   margin-top: 16px;
   touch-action: pan-y;
 }
@@ -208,8 +208,9 @@ ion-icon {
 }
 
 .carousel-item {
-  min-width: 50px;
-  height: 50px;
+  min-width: 30px;
+  width: 50px;
+  height: 40px;
   margin-right: 10px;
   border-radius: 10px;
   overflow: hidden;
@@ -227,3 +228,10 @@ ion-icon {
 .carousel-item:active {
   transform: scale(0.9);
 }
+
+
+
+
+
+
+
