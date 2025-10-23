@@ -59,6 +59,24 @@
     </ion-range>
   </ion-item>
 
+  <!-- Carrusel infinito -->
+<div 
+  class="carousel-container"
+  (touchstart)="onTouchStart($event)"
+  (touchmove)="onTouchMove($event)"
+  (touchend)="onTouchEnd($event)">
+  
+  <div class="carousel-track" [style.transform]="carouselTransform">
+    <div 
+      *ngFor="let img of duplicatedImages"
+      class="carousel-item"
+      (click)="onImageClick(img)">
+      <img [src]="img" alt="Imagen" />
+    </div>
+  </div>
+</div>
+
+
   <ion-item class="compact-item">
       <ion-label color="medium">
         Imagen de Fondo

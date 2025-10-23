@@ -27,23 +27,35 @@ export class HomePage implements OnInit, OnDestroy {
   qrData: string = '';
   qrImage: string = '';
   colorDark = '#000000'; 
-  
-  // Propiedades para RGBA
-  colorLightHex = '#ffffff'; // Parte RGB del fondo
-  alphaLight = 100;         // Porcentaje de transparencia (0 a 100)
-  colorLight = '#ffffffff'; // Valor final RRGGBBAA (blanco opaco por defecto)
-
-  // PROPIEDADES PARA IMAGEN DE FONDO
-  backgroundImage: string | null = null; // Base64 de la imagen de fondo
-  fileName: string | null = null;        // Nombre del archivo para mostrar en UI
-
-  ModoDesarrollo: boolean = true;
+  colorLightHex = '#ffffff'; 
+  alphaLight = 100;         
+  colorLight = '#ffffffff'; 
+  backgroundImage: string | null = null; 
+  fileName: string | null = null;   
   errorClipboard: string | null = null;
   errorGeneral: string | null = null;
+  images: string[] = [
+  'assets/img/add.png',
+  'assets/img/inbox.png',
+  'assets/img/paste.png',
+  'assets/img/qrlogo.png',
+  'assets/img/demo5.jpg'
+];
+  duplicatedImages: string[] = [];
+  carouselTransform = 'translateX(0px)';
+  position = 0;
+  speed = 1.2; // píxeles por frame
+  animationId: number | null = null;
+  isPaused = false;
+
+  startX = 0;
+  currentX = 0;
 
   constructor(private router: Router, private platform:Platform, private toastController: ToastController) { }
 
   ngOnInit() {
+    this.duplicatedImages = [...this.images, ...this.images];
+    this.animate();
     this.platform.ready().then(() => {
       this.setupStatusBar();
     });
@@ -55,34 +67,25 @@ export class HomePage implements OnInit, OnDestroy {
       }
     });
   }
-setupStatusBar() {
-    // 1. Configurar la barra de estado para que sea transparente y superpuesta
-    StatusBar.setStyle({ style: Style.Default });
+
+  setupStatusBar() {  
+      StatusBar.setStyle({ style: Style.Default });
+      StatusBar.setOverlaysWebView({ overlay: true }); 
+      StatusBar.setBackgroundColor({ color: '#00000000' }); 
+    }
     
-    // 2. Usar 'overlaysWebView: true' para que el contenido de la web 
-    //    se extienda por debajo de la barra de estado.
-    StatusBar.setOverlaysWebView({ overlay: true }); 
-    
-    // Opcional: Establecer el color de la barra de estado como transparente
-    // para que el fondo de la app se muestre en su lugar.
-    StatusBar.setBackgroundColor({ color: '#00000000' }); 
-  }
   ngOnDestroy(): void {
+    if (this.animationId) cancelAnimationFrame(this.animationId);
     if (this.routerSubscription) {
       this.routerSubscription.unsubscribe();
     }
   }
 
-  /**
-   * Actualiza la propiedad 'colorLight' combinando el RGB y el canal alfa.
-   */
   updateColorLight() {
     const alpha = Math.round((this.alphaLight / 100) * 255);
     const alphaHex = alpha.toString(16).padStart(2, '0').toUpperCase();
     this.colorLight = this.colorLightHex.slice(0, 7) + alphaHex;
   }
-
-  // --- MÉTODOS PARA IMAGEN DE FONDO ---
 
   async selectBackgroundImage() {
     try {
@@ -96,7 +99,7 @@ setupStatusBar() {
       if (image.dataUrl) {
         this.backgroundImage = image.dataUrl;
         
-        // Simular nombre de archivo ya que DataUrl no lo proporciona fácilmente.
+        
         this.fileName = `fondo_${new Date().getTime()}.jpg`; 
         
         this.showToast('Imagen de fondo cargada.', 'success');
@@ -109,12 +112,9 @@ setupStatusBar() {
 
   removeBackgroundImage() {
     this.backgroundImage = null;
-    this.fileName = null; // Limpiar el nombre del archivo
+    this.fileName = null; 
     this.showToast('Imagen de fondo eliminada.', 'warning');
   }
-
-  // --- FIN MÉTODOS IMAGEN DE FONDO ---
-
 
   async pegarTexto() {
     try {
@@ -163,29 +163,21 @@ setupStatusBar() {
       this.showToast('Por favor, escribe un texto o pega un enlace para generar el QR.', 'danger');
       return;
     }
-
     try {
-      // FIX TS2769: Se usa la aserción 'as 'H'' para corregir el error de tipo de errorCorrectionLevel.
       const qrOptions = { 
         color: { 
           dark: this.colorDark, 
-          // Si hay imagen de fondo, el QR tiene fondo transparente (#00000000).
           light: this.backgroundImage ? '#00000000' : this.colorLight 
         },
         errorCorrectionLevel: 'H' as 'H' 
       };
-
       const qrDataUrl: string = await QRCode.toDataURL(this.qrData, qrOptions);
-
       if (this.backgroundImage) {
-        // Se combina la imagen de fondo con el QR transparente.
         this.qrImage = await this.combineImageAndQR(qrDataUrl, this.backgroundImage);
       } else {
-        // Se usa el QR generado (con fondo de color/transparencia RGBA).
         this.qrImage = qrDataUrl;
       }
       this.showToast('QR generado exitosamente.', 'success');
-
     } catch (err: any) {
       const errorMsg = 'Error generando QR: ' + (err?.message || err);
       console.error(errorMsg);
@@ -193,9 +185,6 @@ setupStatusBar() {
     }
   }
 
-  /**
-   * Combina una imagen de fondo y el código QR en un solo Data URL usando Canvas.
-   */
   private async combineImageAndQR(qrCodeDataUrl: string, backgroundDataUrl: string): Promise<string> {
     return new Promise((resolve, reject) => {
       const canvas = document.createElement('canvas');
@@ -206,31 +195,19 @@ setupStatusBar() {
 
       const backgroundImage = new Image();
       backgroundImage.src = backgroundDataUrl;
-
       backgroundImage.onload = () => {
-        // Establecer el tamaño del canvas al de la imagen de fondo
         canvas.width = backgroundImage.width;
         canvas.height = backgroundImage.height;
-
-        // 1. Dibujar la imagen de fondo
         ctx.drawImage(backgroundImage, 0, 0, canvas.width, canvas.height);
-
-        // Crear una imagen del QR
         const qrImage = new Image();
         qrImage.src = qrCodeDataUrl;
-
         qrImage.onload = () => {
-          // Calcular la posición y tamaño para centrar el QR (75% del tamaño menor)
           const qrSize = Math.min(canvas.width, canvas.height) * 0.75; 
           const x = (canvas.width - qrSize) / 2;
           const y = (canvas.height - qrSize) / 2;
-
-          // 2. Dibujar el QR (transparente) encima de la imagen de fondo
           ctx.drawImage(qrImage, x, y, qrSize, qrSize);
-
           resolve(canvas.toDataURL('image/png'));
         };
-
         qrImage.onerror = () => reject('Error al cargar la imagen QR.');
       };
 
@@ -245,8 +222,8 @@ setupStatusBar() {
     this.colorLightHex = '#ffffff'; 
     this.alphaLight = 100;
     this.updateColorLight(); 
-    this.backgroundImage = null; // Limpiar imagen de fondo
-    this.fileName = null;        // Limpiar nombre del archivo
+    this.backgroundImage = null; 
+    this.fileName = null;        
     this.errorClipboard = null;
     this.errorGeneral = null;
     this.showToast('Campos limpiados.', 'success');
@@ -326,7 +303,6 @@ setupStatusBar() {
     this.router.navigateByUrl('/scan');
   }
 
-  // Helper para mostrar Toasts
   async showToast(message: string, color: string = 'primary', duration: number = 3000) {
     const toast = await this.toastController.create({
       message,
@@ -336,5 +312,43 @@ setupStatusBar() {
       cssClass: 'toast-error'
     });
     await toast.present();
+  }
+
+
+
+
+
+  animate() {
+    if (!this.isPaused) {
+      this.position -= this.speed;
+      const totalWidth = this.duplicatedImages.length * 60; // ancho aprox (50px + 10px margen)
+      if (Math.abs(this.position) >= totalWidth / 2) {
+        this.position = 0; // reinicia sin salto visible
+      }
+      this.carouselTransform = `translateX(${this.position}px)`;
+    }
+    this.animationId = requestAnimationFrame(() => this.animate());
+  }
+
+  onTouchStart(event: TouchEvent) {
+    this.isPaused = true;
+    this.startX = event.touches[0].clientX;
+  }
+
+  onTouchMove(event: TouchEvent) {
+    const moveX = event.touches[0].clientX - this.startX;
+    this.carouselTransform = `translateX(${this.position + moveX}px)`;
+  }
+
+  onTouchEnd(event: TouchEvent) {
+    const endX = event.changedTouches[0].clientX;
+    const deltaX = endX - this.startX;
+    this.position += deltaX * 0.8;
+    this.isPaused = false;
+  }
+
+  onImageClick(img: string) {
+    this.isPaused = !this.isPaused; // pausa o reanuda con clic
+    console.log('Imagen seleccionada:', img);
   }
 }
