@@ -12,6 +12,8 @@ import { filter } from 'rxjs/operators';
 import { BannerAdPosition } from '@capacitor-community/admob';
 import { ToastController } from '@ionic/angular';
 import { Camera, CameraResultType, CameraSource } from '@capacitor/camera'; 
+import { StatusBar, Style } from '@capacitor/status-bar';
+
 
 @Component({
   selector: 'app-home',
@@ -42,6 +44,9 @@ export class HomePage implements OnInit, OnDestroy {
   constructor(private router: Router, private platform:Platform, private toastController: ToastController) { }
 
   ngOnInit() {
+    this.platform.ready().then(() => {
+      this.setupStatusBar();
+    });
     this.routerSubscription = this.router.events.pipe(
       filter((event) => event instanceof NavigationEnd)
     ).subscribe((event: NavigationEnd) => {
@@ -50,7 +55,18 @@ export class HomePage implements OnInit, OnDestroy {
       }
     });
   }
-
+setupStatusBar() {
+    // 1. Configurar la barra de estado para que sea transparente y superpuesta
+    StatusBar.setStyle({ style: Style.Default });
+    
+    // 2. Usar 'overlaysWebView: true' para que el contenido de la web 
+    //    se extienda por debajo de la barra de estado.
+    StatusBar.setOverlaysWebView({ overlay: true }); 
+    
+    // Opcional: Establecer el color de la barra de estado como transparente
+    // para que el fondo de la app se muestre en su lugar.
+    StatusBar.setBackgroundColor({ color: '#00000000' }); 
+  }
   ngOnDestroy(): void {
     if (this.routerSubscription) {
       this.routerSubscription.unsubscribe();

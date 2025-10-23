@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+import { StatusBar, Style } from '@capacitor/status-bar';
 
 @Component({
   selector: 'app-root',
@@ -7,5 +8,9 @@ import { Component } from '@angular/core';
   standalone: false,
 })
 export class AppComponent {
-  constructor() {}
+
+  constructor() {
+    StatusBar.setOverlaysWebView({ overlay: true });
+    StatusBar.setBackgroundColor({ color: '#00000000' });
+  }
 }

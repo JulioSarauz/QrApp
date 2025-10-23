@@ -1,39 +1,38 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <!-- Base application theme. (Lo mantengo para referencia, pero no se usa en Capacitor) -->
-    <style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
-        <!-- Customize your theme here. -->
-        <item name="colorPrimary">@color/colorPrimary</item>
-        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
-        <item name="colorAccent">@color/colorAccent</item>
-    </style>
-
-    <!-- EL TEMA PRINCIPAL QUE USA CAPACITOR Y IONIC -->
     <style name="AppTheme.NoActionBar" parent="Theme.AppCompat.DayNight.NoActionBar">
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>
         <item name="android:background">@null</item>
         
-        <!-- 👉 AÑADIDO: HABILITAR BORDE A BORDE MEDIANTE TRANSPARENCIA -->
-        <!-- La barra de estado se vuelve transparente, permitiendo que el contenido fluya debajo. -->
+        <item name="android:windowDrawsSystemBarBackgrounds">true</item>
+        
         <item name="android:statusBarColor">@android:color/transparent</item>
         
-        <!-- La barra de navegación (botones Home/Back) se vuelve transparente. -->
         <item name="android:navigationBarColor">@android:color/transparent</item>
 
-        <!-- Asegura que la aplicación se extienda a la barra de estado -->
-        <item name="android:windowDrawsSystemBarBackgrounds">true</item>
+        <item name="android:windowLayoutInDisplayCutoutMode">shortEdges</item> 
+        
+        <item name="android:windowBackground">@color/backgroundColor</item> 
+        
+        <item name="android:windowSoftInputMode">adjustResize</item>
     </style>
 
-
     <style name="AppTheme.NoActionBarLaunch" parent="Theme.SplashScreen">
-        <!-- Aseguramos que el tema del SplashScreen también respete el borde a borde -->
         <item name="postSplashScreenTheme">@style/AppTheme.NoActionBar</item>
         <item name="android:background">@drawable/splash</item>
         
-        <!-- Opcional, pero recomendado si usas un color sólido en el fondo del splash -->
         <item name="android:statusBarColor">@android:color/transparent</item>
         <item name="android:navigationBarColor">@android:color/transparent</item>
+        
+        <item name="android:windowLayoutInDisplayCutoutMode">shortEdges</item>
     </style>
+    
+    <style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
+        <item name="colorPrimary">@color/colorPrimary</item>
+        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
+        <item name="colorAccent">@color/colorAccent</item>
+    </style>
+
 </resources>
