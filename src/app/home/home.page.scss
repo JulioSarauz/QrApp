@@ -1,191 +1,191 @@
 ion-content {
- padding: 8px !important;
- box-sizing: border-box;
- overflow-y: auto;
-  --padding-bottom: 200px;
-  padding-bottom: var(--padding-bottom);
+padding: 8px !important;
+box-sizing: border-box;
+overflow-y: auto;
+ --padding-bottom: 200px;
+ padding-bottom: var(--padding-bottom);
 }
 
 
 .sin-margen {
- margin: 4px 0 !important;
+margin: 4px 0 !important;
 }
 
 
 .boton-generar {
- height: 48px;
- font-size: 16px;
- border-radius: 10px;
- background-color: #1b2236;
- color: #fff;
- --background: #1b2236;
- --color: #fff;
+height: 48px;
+font-size: 16px;
+border-radius: 10px;
+background-color: #1b2236;
+color: #fff;
+--background: #1b2236;
+--color: #fff;
 }
 
 
 .botones-acciones {
- display: flex;
- justify-content: space-between;
- gap: 6px;
- margin: 4px 0;
+display: flex;
+justify-content: space-between;
+gap: 6px;
+margin: 4px 0;
 }
 
 .botones-acciones ion-button {
- flex: 1;
- height: 48px;
- margin: 0;
+flex: 1;
+height: 48px;
+margin: 0;
 }
 
 
 .input-container {
- background-color: #cacaca;
- padding: 6px;
- border-radius: 6px;
- margin: 4px 0;
+background-color: #cacaca;
+padding: 6px;
+border-radius: 6px;
+margin: 4px 0;
 }
 
 
 .compact-item {
- --min-height: 40px;
- margin: 4px 0;
- padding: 0 4px;
- --inner-padding-end: 0;
- --inner-padding-start: 0;
+--min-height: 40px;
+margin: 4px 0;
+padding: 0 4px;
+--inner-padding-end: 0;
+--inner-padding-start: 0;
 }
 
 /* --- ESTILOS AÑADIDOS/MODIFICADOS PARA COLORES Y NOMBRES DE ARCHIVO --- */
 
 .color-picker-group {
-    display: flex;
-    align-items: center;
-    gap: 8px; 
-    padding: 0 4px; 
-    
-    ion-input {
-        --padding-start: 0;
-        --padding-end: 0;
-        max-width: 60px;
-        height: 40px;
-        border: 1px solid var(--ion-color-medium);
-        border-radius: 4px;
-    }
+  display: flex;
+  align-items: center;
+  gap: 8px; 
+  padding: 0 4px; 
+  
+  ion-input {
+    --padding-start: 0;
+    --padding-end: 0;
+    max-width: 60px;
+    height: 40px;
+    border: 1px solid var(--ion-color-medium);
+    border-radius: 4px;
+  }
 }
 
 .file-name-display {
-  font-size: 0.8em;
-  color: var(--ion-color-medium);
-  margin-top: 2px;
-  
-  &.file-loaded {
-    color: var(--ion-color-dark); 
-    font-weight: bold;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-    max-width: 100%; 
-  }
+ font-size: 0.8em;
+ color: var(--ion-color-medium);
+ margin-top: 2px;
+ 
+ &.file-loaded {
+  color: var(--ion-color-dark); 
+  font-weight: bold;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  max-width: 100%; 
+ }
 }
 
 /* --- FIN ESTILOS AÑADIDOS/MODIFICADOS --- */
 
 .imgqr {
- width: 80%;
- margin: 8px auto;
- display: block;
+width: 80%;
+margin: 8px auto;
+display: block;
 }
 
 
 .qr-generado {
- display: flex;
- flex-direction: column;
- justify-content: center;
- margin-top: 10px;
- margin-bottom: 220px; 
- width: 100%;
+display: flex;
+flex-direction: column;
+align-items: center; /* Centrado para el img y el botón de compartir */
+margin-top: 20px;
+margin-bottom: 220px; /* Suficiente espacio para que no lo tape el banner/footer */
+width: 100%;
 }
 
 
 .qr-generado ion-button {
- width: 100% !important; 
- margin-top: 10px;  
- height: 48px;
- font-size: 16px;
- border-radius: 10px;
+width: 80% !important; /* Haz que el botón Compartir sea del mismo ancho que la imagen */
+margin-top: 10px; 
+height: 48px;
+font-size: 16px;
+border-radius: 10px;
 }
 
 
 .logo-qr {
- width: 28px;
- height: 28px;
- margin-right: 10px;
- border-radius: 5px;
+width: 28px;
+height: 28px;
+margin-right: 10px;
+border-radius: 5px;
 }
 
 
 .custom-footer {
- position: fixed;
- bottom: 60px; 
- left: 0;
- width: 100%;
- z-index: 1000;
+position: fixed;
+bottom: 60px; 
+left: 0;
+width: 100%;
+z-index: 1000;
 }
 
 .custom-footer ion-toolbar {
- --background: linear-gradient(135deg, #0d0d0d, #2c2c2c);
- --color: #f5f5f5;
+--background: linear-gradient(135deg, #0d0d0d, #2c2c2c);
+--color: #f5f5f5;
 }
 
 
 .custom-tab-bar {
- --background: transparent;
- display: flex;
- justify-content: space-around;
- align-items: center;
+--background: transparent;
+display: flex;
+justify-content: space-around;
+align-items: center;
 }
 
 ion-tab-button {
- color: #f5f5f5;
+color: #f5f5f5;
 }
 
 ion-icon {
- font-size: 1.4rem;
+font-size: 1.4rem;
 }
 
 .center-button-circle {
- background-color: #1e1e1e;
- border-radius: 50%;
- padding: 6px;
- display: flex;
- align-items: center;
- justify-content: center;
+background-color: #1e1e1e;
+border-radius: 50%;
+padding: 6px;
+display: flex;
+align-items: center;
+justify-content: center;
 }
 
 .center-logo {
- width: 2.5em;
- height: 2.5em;
- border-radius: 50%;
- object-fit: cover;
+width: 2.5em;
+height: 2.5em;
+border-radius: 50%;
+object-fit: cover;
 }
 
 
 .admob-banner-container {
- position: fixed;
- bottom: 0;
- left: 0;
- width: 100%;
- height: 60px; 
- background: linear-gradient(135deg, #0d0d0d, #2c2c2c);
- z-index: 1100;
- display: flex;
- align-items: center;
- justify-content: center;
+position: fixed;
+bottom: 0;
+left: 0;
+width: 100%;
+height: 60px; 
+background: linear-gradient(135deg, #0d0d0d, #2c2c2c);
+z-index: 1100;
+display: flex;
+align-items: center;
+justify-content: center;
 }
 .toast-error {
- --background: rgba(0,0,0,0.85);
- --color: #fff;
- --box-shadow: 0 4px 12px rgba(0,0,0,0.3);
- border-radius: 12px;
- text-align: center;
+--background: rgba(0,0,0,0.85);
+--color: #fff;
+--box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+border-radius: 12px;
+text-align: center;
 }
 
 
@@ -194,39 +194,39 @@ ion-icon {
 
 
 .carousel-container {
-  width: 100%;
-  overflow: hidden;
-  position: relative;
-  height: 50px;
-  margin-top: 16px;
-  touch-action: pan-y;
+ width: 100%;
+ overflow: hidden;
+ position: relative;
+ height: 50px;
+ margin-top: 16px;
+ touch-action: pan-y;
 }
 
 .carousel-track {
-  display: flex;
-  will-change: transform;
+ display: flex;
+ will-change: transform;
 }
 
 .carousel-item {
-  min-width: 30px;
-  width: 50px;
-  height: 40px;
-  margin-right: 10px;
-  border-radius: 10px;
-  overflow: hidden;
-  flex-shrink: 0;
-  cursor: pointer;
-  transition: transform 0.2s ease;
+ min-width: 30px;
+ width: 50px;
+ height: 40px;
+ margin-right: 10px;
+ border-radius: 10px;
+ overflow: hidden;
+ flex-shrink: 0;
+ cursor: pointer;
+ transition: transform 0.2s ease;
 }
 
 .carousel-item img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
+ width: 100%;
+ height: 100%;
+ object-fit: cover;
 }
 
 .carousel-item:active {
-  transform: scale(0.9);
+ transform: scale(0.9);
 }
 
 
@@ -239,23 +239,56 @@ ion-icon {
 
 // Estilo para el componente ion-loading
 .custom-loading-class {
-    // Opacidad de fondo
-    --backdrop-opacity: 0.5;
-    
-    // Color del spinner y del texto
-    --spinner-color: var(--ion-color-primary, #1b2236); // Usa el color principal de tu app
-    color: var(--ion-color-dark, #1b2236);
-    
-    // Contenedor de la carga (la caja blanca que contiene el spinner y el mensaje)
-    .loading-wrapper {
-        border-radius: 15px; // Esquinas redondeadas
-        padding: 20px 30px; // Más espacio interno
-        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2); // Sombra sutil
-    }
-    
-    // Asegura que el texto del mensaje sea legible y visible
-    .loading-content {
-        font-weight: 600;
-        font-size: 1.1em;
-    }
+  // Opacidad de fondo
+  --backdrop-opacity: 0.5;
+  
+  // Color del spinner y del texto
+  --spinner-color: var(--ion-color-primary, #1b2236); // Usa el color principal de tu app
+  color: var(--ion-color-dark, #1b2236);
+  
+  // Contenedor de la carga (la caja blanca que contiene el spinner y el mensaje)
+  .loading-wrapper {
+    border-radius: 15px; // Esquinas redondeadas
+    padding: 20px 30px; // Más espacio interno
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2); // Sombra sutil
+  }
+  
+  // Asegura que el texto del mensaje sea legible y visible
+  .loading-content {
+    font-weight: 600;
+    font-size: 1.1em;
+  }
+}
+
+.qr-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+  margin-top: 16px;
+}
+
+/* Estilo para el contenedor del canvas de vista previa */
+.qr-canvas {
+  width: 300px;
+  height: 300px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  
+  // ELIMINAR O COMENTAR ESTA LÍNEA para que el Renderer2 pueda controlar el fondo
+  // background-color: #f0f0f0; 
+  
+  border-radius: 16px;
+  border: 1px dashed var(--ion-color-medium); 
+  
+  // Aseguramos que la imagen de fondo CSS se ajuste
+  background-repeat: no-repeat;
+}
+.qr-canvas canvas {
+  border-radius: 16px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+}
+canvas {
+ border-radius: 16px;
 }
