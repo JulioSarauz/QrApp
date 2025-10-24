@@ -28,7 +28,7 @@ export class HomePage implements OnInit, OnDestroy {
  @ViewChild('qrCanvas', { static: true }) qrCanvas!: ElementRef;
  qrCode!: QRCodeStyling; 
  
- currentShape: 'square' | 'rounded' = 'rounded'; 
+ currentShape: 'square' | 'rounded' | 'diagLeft' | 'diagRight' = 'square'; 
  private isQrCodeAppended: boolean = false; // Bandera para controlar la inserción del canvas
 
 private routerSubscription: Subscription = new Subscription();
@@ -58,7 +58,7 @@ position = 0;
 speed = 1.2;
 animationId: number | null = null;
 isPaused = false;
-
+logoFileName: string | null = null;
 
 startX = 0;
 currentX = 0;
@@ -115,21 +115,53 @@ ngOnInit() {
 }
 
 // Ajustar la función updateShape para usar los tipos compatibles
-async updateShape(shape: 'square' | 'rounded') {
+async updateShape(shape: 'square' | 'rounded' | 'diagLeft' | 'diagRight') {
   this.currentShape = shape;
 
   if (!this.isQrCodeAppended) {
-   this.generateQR(true); 
-   return;
+    this.generateQR(true);
+    return;
   }
 
-  this.qrCode.update({
-   dotsOptions: { type: shape as DotType },
-   cornersSquareOptions: { type: (shape === 'square' ? 'square' : 'extra-rounded') as CornerSquareType },
-   cornersDotOptions: { type: (shape === 'square' ? 'dot' : 'rounded') as CornerDotType }
-  });
- }
+  // Definimos los tipos válidos de qr-code-styling
+  let dotsType: DotType = 'square';
+  let cornersSquareType: CornerSquareType = 'square';
+  let cornersDotType: CornerDotType = 'square';
 
+  switch (shape) {
+    case 'square':
+      dotsType = 'square';
+      cornersSquareType = 'square';
+      cornersDotType = 'square';
+      break;
+
+    case 'rounded':
+      dotsType = 'rounded';
+      cornersSquareType = 'extra-rounded';
+      cornersDotType = 'rounded';
+      break;
+
+    case 'diagLeft':
+      // Redondeado parcialmente (solo algunas esquinas)
+      dotsType = 'rounded';
+      cornersSquareType = 'extra-rounded';
+      cornersDotType = 'square';
+      break;
+
+    case 'diagRight':
+      dotsType = 'square';
+      cornersSquareType = 'square';
+      cornersDotType = 'rounded';
+      break;
+  }
+
+  // Actualizamos el QR con las combinaciones válidas
+  this.qrCode.update({
+    dotsOptions: { type: dotsType },
+    cornersSquareOptions: { type: cornersSquareType },
+    cornersDotOptions: { type: cornersDotType },
+  });
+}
 private withTimeout<T>(promise: Promise<T>, ms: number): Promise<T> {
   return new Promise((resolve, reject) => {
    const timeout = setTimeout(() => {
@@ -350,6 +382,9 @@ private async combineImageAndQR(qrCodeDataUrl: string, backgroundDataUrl: string
 }
 
 limpiarCampos() {
+
+ this.logoFileName = null; 
+ this.errorGeneral = null;
  this.qrData = '';
  this.qrImage = ''; 
  this.colorDark = '#000000';
@@ -360,7 +395,6 @@ limpiarCampos() {
  this.backgroundImage2 = null; 
  this.fileName = null;
  this.errorClipboard = null;
- this.errorGeneral = null;
  this.showToast('Campos limpiados.', 'success');
 
  this.qrCode.update({ 
@@ -491,9 +525,12 @@ onImageSelected(event: any) {
  if (file) {
   const reader = new FileReader();
   reader.onload = () => {
-   this.backgroundImage2 = reader.result as string;
+   this.backgroundImage2 = reader.result as string; // Sigue guardando el DataURL para el QR
+   // Asignar el nombre del archivo para la vista
+   this.logoFileName = file.name; 
+   // Actualiza inmediatamente la vista previa del QR con el nuevo logo
    this.qrCode.update({ image: this.backgroundImage2 });
-   this.showToast('Logo cargado correctamente ✅', 'success');
+   this.showToast(`Logo "${file.name}" cargado ✅`, 'success');
   };
   reader.readAsDataURL(file);
  }
