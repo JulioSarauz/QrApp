@@ -15,9 +15,16 @@
       Iniciar Escaneo
     </ion-button>
 
-    <ion-button class="boton-generar BotonColor4" (click)="NuevaSolicitudEscaneo()" *ngIf="ContenidoQrTexto">
+    <ion-button 
+        class="boton-generar BotonColor4" 
+        (click)="NuevaSolicitudEscaneo()" 
+        *ngIf="ContenidoQrTexto"
+        [disabled]="isScanningNew" 
+     disabled="true">
       <img src="assets/img/add.png" alt="Logo QR" class="logo-qr" />
-      Nuevo Escaneo
+      <!-- Muestra el indicador de carga cuando está activo -->
+      <span *ngIf="isScanningNew">Cargando Publicidad...</span>
+      <span *ngIf="!isScanningNew">Nuevo Escaneo</span>
     </ion-button>
 
     <ion-button class="boton-generar BotonColor3" (click)="cargarImagen($event)">

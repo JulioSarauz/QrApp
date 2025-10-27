@@ -41,7 +41,14 @@
     z-index: 99999 !important;
   }
 
+
 html, body, ion-app, ion-content {
-  --background: linear-gradient(135deg, #2c3e50 0%, #4ca1af 100%) !important;
+  height: 100%;
+  width: 100%;
+  margin: 0;
+  padding: 0;
+  --ion-safe-area-top: 0px;
+  --ion-safe-area-bottom: 0px;
+   --background: linear-gradient(135deg, #2c3e50 0%, #4ca1af 100%) !important;
   background: linear-gradient(135deg, #2c3e50 0%, #4ca1af 100%) !important;
 }

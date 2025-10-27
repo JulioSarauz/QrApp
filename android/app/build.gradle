@@ -17,8 +17,8 @@ android {
     applicationId "com.neiruzlab.app"
     minSdkVersion 23
     targetSdkVersion 35
-    versionCode 44
-    versionName "1.1.6"
+    versionCode 46
+    versionName "1.1.8"
     testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     aaptOptions {
       ignoreAssetsPattern '!.svn:!.git:!.ds_store:!*.scc:.*:!CVS:!thumbs.db:!picasa.ini:!*~'

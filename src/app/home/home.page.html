@@ -2,127 +2,152 @@
 
 <ion-content id="main-content" class="ion-padding">
 
-    <ion-button expand="block" class="boton-generar sin-margen" (click)="goToMenu()">
-        <ion-icon name="arrow-back" slot="start"></ion-icon>
-        Regresar al Menú
+  <!-- Acciones principales compactas -->
+  <div class="botones-superiores-full">
+    <ion-button expand="block" fill="solid" size="small" color="medium" (click)="goToMenu()">
+      <ion-icon name="arrow-back" slot="icon-only"></ion-icon>
     </ion-button>
+    <ion-button expand="block" fill="solid" size="small" color="success" (click)="pegarTexto()">
+      <ion-icon name="clipboard" slot="icon-only"></ion-icon>
+    </ion-button>
+    <ion-button expand="block" fill="solid" size="small" color="danger" (click)="limpiarCampos()">
+      <ion-icon name="trash" slot="icon-only"></ion-icon>
+    </ion-button>
+  </div>
+  <!-- Entrada de texto -->
+  <div class="input-container sin-margen">
+    <ion-label position="stacked" color="danger">Escribe un texto o pega un enlace</ion-label>
+    <ion-input [(ngModel)]="qrData" (ngModelChange)="generateQR(true)"></ion-input>
+  </div>
 
-    <div class="botones-acciones">
-        <ion-button expand="block" color="success" (click)="pegarTexto()">
-            <img src="assets/img/paste.png" alt="Cargar" class="logo-qr" />
-        </ion-button>
-        <ion-button expand="block" color="danger" (click)="limpiarCampos()">
-            <img src="assets/img/bin.png" alt="Limpiar" class="logo-qr" />
-        </ion-button>
-    </div>
+  <!-- 🔹 Barra de navegación horizontal para categorías -->
+  <ion-segment [(ngModel)]="selectedTab" mode="ios" class="toolbar-opciones">
+    <ion-segment-button value="colores">
+      <ion-icon name="color-palette"></ion-icon>
+      <ion-label>Colores</ion-label>
+    </ion-segment-button>
+    <ion-segment-button value="transparencia">
+      <ion-icon name="contrast"></ion-icon>
+      <ion-label>Transparencia</ion-label>
+    </ion-segment-button>
+    <ion-segment-button value="imagenes">
+      <ion-icon name="image"></ion-icon>
+      <ion-label>Imágenes</ion-label>
+    </ion-segment-button>
+    <ion-segment-button value="formas">
+      <ion-icon name="shapes"></ion-icon>
+      <ion-label>Formas</ion-label>
+    </ion-segment-button>
+  </ion-segment>
 
-    <div class="input-container sin-margen">
-        <ion-label position="stacked" color="danger">
-            Escribe un texto o pega un enlace
-        </ion-label>
-        <ion-input [(ngModel)]="qrData" (ngModelChange)="generateQR(true)"></ion-input>
-    </div>
+  <!-- 🔹 Contenido dinámico según la pestaña seleccionada -->
 
-    <ion-grid class="sin-margen color-controls" style="padding: 0;">
-        <ion-row class="ion-align-items-center">
-            <ion-col size="6" class="color-picker-group">
-                <ion-label color="dark">Color QR</ion-label>
-                <ion-input type="color" [(ngModel)]="colorDark" (ngModelChange)="generateQR(true)"></ion-input>
-            </ion-col>
-            <ion-col size="6" class="color-picker-group">
-                <ion-label color="medium">Fondo RGB</ion-label>
-                <ion-input type="color" [(ngModel)]="colorLightHex" (ngModelChange)="updateColorLight()"></ion-input>
-            </ion-col>
-        </ion-row>
+  <!-- Sección: Colores -->
+  <div *ngIf="selectedTab === 'colores'" class="panel-opciones">
+    <ion-grid class="sin-margen" style="padding: 0;">
+      <ion-row class="ion-align-items-center">
+        <ion-col size="6">
+          <ion-label color="dark">Color QR</ion-label>
+          <ion-input type="color" [(ngModel)]="colorDark" (ngModelChange)="generateQR(true)"></ion-input>
+        </ion-col>
+        <ion-col size="6">
+          <ion-label color="medium">Fondo RGB</ion-label>
+          <ion-input type="color" [(ngModel)]="colorLightHex" (ngModelChange)="updateColorLight()"></ion-input>
+        </ion-col>
+      </ion-row>
     </ion-grid>
+  </div>
 
+  <!-- Sección: Transparencia -->
+  <div *ngIf="selectedTab === 'transparencia'" class="panel-opciones">
     <ion-item class="compact-item">
-        <ion-label color="medium">Transparencia</ion-label>
-        <ion-range aria-label="Transparencia" min="0" max="100" step="1" pin="true"
-            [(ngModel)]="alphaLight" (ionChange)="updateColorLight()">
-            <ion-label slot="start">0%</ion-label>
-            <ion-label slot="end">100%</ion-label>
-        </ion-range>
+      <ion-label color="medium">Transparencia</ion-label>
+      <ion-range aria-label="Transparencia" min="0" max="100" step="1" pin="true" [(ngModel)]="alphaLight"
+        (ionChange)="updateColorLight()">
+        <ion-label slot="start">0%</ion-label>
+        <ion-label slot="end">100%</ion-label>
+      </ion-range>
+    </ion-item>
+  </div>
+
+  <!-- Sección: Imágenes -->
+  <div *ngIf="selectedTab === 'imagenes'" class="panel-opciones">
+    <!-- Imagen central -->
+    <ion-item class="compact-item">
+      <ion-label color="medium">
+        Logo central
+        <p class="file-name-display" [class.file-loaded]="logoFileName">
+          {{ logoFileName ? logoFileName : '(Opcional: Cargar logo)' }}
+        </p>
+      </ion-label>
+      <input type="file" #logoFileInput accept="image/*" (change)="onImageSelected($event)" class="file-input">
+      <ion-button slot="end" size="small" (click)="logoFileInput.click()">
+        <ion-icon name="image" slot="icon-only"></ion-icon>
+      </ion-button>
+      <ion-button *ngIf="logoFileName" slot="end" size="small" color="danger"
+        (click)="backgroundImage2 = null; logoFileName = null; generateQR(true);">
+        <ion-icon name="close-circle" slot="icon-only"></ion-icon>
+      </ion-button>
     </ion-item>
 
+    <!-- Imagen de fondo -->
     <ion-item class="compact-item">
-        <ion-label color="medium">
-            Logo central
-            <p class="file-name-display" [class.file-loaded]="logoFileName">
-                {{ logoFileName ? logoFileName : '(Opcional: Cargar logo)' }}
-            </p>
-        </ion-label>
-        <input type="file" #logoFileInput accept="image/*" (change)="onImageSelected($event)" class="file-input">
-        
-        <ion-button slot="end" size="small" (click)="logoFileInput.click()">
-            <ion-icon name="image" slot="icon-only"></ion-icon>
-        </ion-button>
-        
-        <ion-button *ngIf="logoFileName" slot="end" size="small" color="danger" (click)="backgroundImage2 = null; logoFileName = null; generateQR(true);">
-            <ion-icon name="close-circle" slot="icon-only"></ion-icon>
-        </ion-button>
+      <ion-label color="medium">
+        Imagen de Fondo
+        <p class="file-name-display" [class.file-loaded]="fileName">
+          {{ fileName ? fileName : '(Opcional: Cargar imagen)' }}
+        </p>
+      </ion-label>
+      <ion-button slot="end" size="small" (click)="selectBackgroundImage()">
+        <ion-icon name="image" slot="icon-only"></ion-icon>
+      </ion-button>
+      <ion-button *ngIf="backgroundImage" slot="end" size="small" color="danger" (click)="removeBackgroundImage()">
+        <ion-icon name="close-circle" slot="icon-only"></ion-icon>
+      </ion-button>
     </ion-item>
+    <div class="carousel-container" (touchstart)="onTouchStart($event)" (touchmove)="onTouchMove($event)"
+      (touchend)="onTouchEnd($event)">
+      <div class="carousel-track" [style.transform]="carouselTransform">
+        <div *ngFor="let img of duplicatedImages" class="carousel-item" (click)="onImageClick(img)"> <img [src]="img"
+            alt="Imagen" /> </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Sección: Formas -->
+  <div *ngIf="selectedTab === 'formas'" class="panel-opciones">
+    <ion-item lines="none" class="no-background compact-radio">
+      <ion-label>Forma del QR</ion-label>
+      <ion-select [(ngModel)]="currentShape" (ionChange)="updateShape($event.detail.value)">
+        <ion-select-option value="square">Cuadrado</ion-select-option>
+        <ion-select-option value="rounded">Redondo</ion-select-option>
+        <!-- <ion-select-option value="diagLeft">Diagonal Izquierda</ion-select-option>
+        <ion-select-option value="diagRight">Diagonal Derecha</ion-select-option> -->
+      </ion-select>
+    </ion-item>
+  </div>
+
+  <!-- QR generado -->
+  <div class="qr-container">
+    <div #qrCanvas class="qr-canvas"></div>
+  </div>
+
+<ion-button 
+    *ngIf="qrData.trim().length > 0" 
+    expand="block" 
+    class="boton-generar sin-margen" 
+    (click)="shareQR()"
+    [disabled]="isSharing"
+>
+    <img src="assets/img/share.png" alt="Compartir" class="logo-qr" />
     
-    <ion-item class="compact-item">
-        <ion-label color="medium">
-            Imagen de Fondo
-            <p class="file-name-display" [class.file-loaded]="fileName">
-                {{ fileName ? fileName : '(Opcional: Cargar imagen)' }}
-            </p>
-        </ion-label>
-        <ion-button slot="end" size="small" (click)="selectBackgroundImage()">
-            <ion-icon name="image" slot="icon-only"></ion-icon>
-        </ion-button>
-        <ion-button *ngIf="backgroundImage" slot="end" size="small" color="danger" (click)="removeBackgroundImage()">
-            <ion-icon name="close-circle" slot="icon-only"></ion-icon>
-        </ion-button>
-    </ion-item>
-
-    <div class="carousel-container" (touchstart)="onTouchStart($event)" (touchmove)="onTouchMove($event)" (touchend)="onTouchEnd($event)">
-        <div class="carousel-track" [style.transform]="carouselTransform">
-            <div *ngFor="let img of duplicatedImages" class="carousel-item" (click)="onImageClick(img)">
-                <img [src]="img" alt="Imagen" />
-            </div>
-        </div>
-    </div>
-
-    <div class="qr-container">
-        <ion-radio-group [value]="currentShape" (ionChange)="updateShape($event.detail.value)" class="shape-radio-group no-background">
-            <ion-grid style="padding: 0;">
-                <ion-row class="ion-align-items-center">
-                    <ion-col size="6" class="ion-text-end">
-                        <ion-item lines="none" class="shape-item no-background compact-radio">
-                            <ion-radio slot="start" value="square" color="primary"></ion-radio>
-                            <ion-label>Cuadrado</ion-label>
-                        </ion-item>
-                    </ion-col>
-
-                    <ion-col size="6" class="ion-text-start">
-                        <ion-item lines="none" class="shape-item no-background compact-radio">
-                            <ion-radio slot="start" value="rounded" color="primary"></ion-radio>
-                            <ion-label>Redondo</ion-label>
-                        </ion-item>
-                    </ion-col>
-                </ion-row>
-            </ion-grid>
-        </ion-radio-group>
-        
-        <div #qrCanvas class="qr-canvas"></div> 
-    </div>
-
-    <ion-button *ngIf="qrData.trim().length > 0 && !qrImage" expand="block" class="boton-generar sin-margen" (click)="shareQR()">
-        <img src="assets/img/share.png" alt="Logo Cargar" class="logo-qr" />
-        Compartir 
-    </ion-button>
-
-    <div *ngIf="qrImage" class="qr-generado">
-        <img class="imgqr" [src]="qrImage" alt="QR Code final" />
-        
-        <ion-button expand="block" class="boton-generar sin-margen" (click)="shareQR()">
-            <img src="assets/img/share.png" alt="Logo Cargar" class="logo-qr" />
-            Compartir 
-        </ion-button>
-    </div>
+    <span *ngIf="!isSharing">Compartir</span>
+    
+    <span *ngIf="isSharing">
+        <ion-spinner name="crescent"></ion-spinner>
+        Cargando Publicidad...
+    </span>
+</ion-button>
 
 </ion-content>
 

@@ -24,7 +24,7 @@ const config: CapacitorConfig = {
     },
   },
   android: {
-    adjustMarginsForEdgeToEdge: 'force',
+    adjustMarginsForEdgeToEdge: "auto"
   }
 };
 

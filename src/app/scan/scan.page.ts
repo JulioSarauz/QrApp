@@ -28,21 +28,28 @@ export class ScanPage implements OnInit, OnDestroy {
  
  private stream: MediaStream | null = null;
  private animationFrameId: number = 0;
-
+ isScanningNew: boolean = false; 
  constructor(
     private router: Router, 
     private toastController: ToastController,
     private platform: Platform 
   ) { }
-  
-  
-  
+
  async NuevaSolicitudEscaneo() { 
-  await showInterstitialAd();     
-  this.ContenidoQrTexto = "";
+    if (this.isScanningNew) {
+        return;
+    }
+    this.isScanningNew = true; 
+    try {
+        await showInterstitialAd(); 
+        this.ContenidoQrTexto = "";
+    } catch (error) {
+        console.error('Error al mostrar la publicidad o al reiniciar escaneo:', error);
+    } finally {
+        this.isScanningNew = false;
+    }
  }
   
-
  ngOnInit() {
   this.routerSubscription = this.router.events.pipe(
    filter((event) => event instanceof NavigationEnd)
@@ -140,12 +147,10 @@ export class ScanPage implements OnInit, OnDestroy {
  }
 
  goToScanner() {
-    
-    
   this.router.navigateByUrl('/scan');
  }
  goToMenu() {
-    this.detenerEscaneo();
+  this.detenerEscaneo();
   this.router.navigateByUrl('/menu');
  }
 async EscanearQrEnVivo() {
@@ -199,7 +204,6 @@ async EscanearQrEnVivo() {
   }
 }
 
-
 private detenerEscaneo() {
   if (this.animationFrameId) {
     cancelAnimationFrame(this.animationFrameId);
@@ -211,11 +215,11 @@ private detenerEscaneo() {
   }
   this.MostrarEnfoque = false;
 }
-  ngOnDestroy(): void {
-    if (this.routerSubscription) {
-      this.routerSubscription.unsubscribe();
-    }
-    
-    this.detenerEscaneo();
+ngOnDestroy(): void {
+  if (this.routerSubscription) {
+    this.routerSubscription.unsubscribe();
   }
+  
+  this.detenerEscaneo();
+}
 }

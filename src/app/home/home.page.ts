@@ -1,7 +1,5 @@
 import { Component, OnInit, OnDestroy, Renderer2, inject } from '@angular/core';
 import { Filesystem, Directory } from '@capacitor/filesystem';
-
-
 import { Dialog } from '@capacitor/dialog';
 import { Share } from '@capacitor/share';
 import { Platform, LoadingController, ToastController } from '@ionic/angular';
@@ -13,6 +11,8 @@ import { Camera, CameraResultType, CameraSource } from '@capacitor/camera';
 import { StatusBar, Style } from '@capacitor/status-bar';
 import { ElementRef, ViewChild } from '@angular/core';
 import QRCodeStyling, { DotType, CornerSquareType, CornerDotType } from 'qr-code-styling';
+import { showBannerMenu, showInterstitialAd } from 'src/componentes/AdMob/publicidad';
+import { BannerAdPosition } from '@capacitor-community/admob';
 
 @Component({
   selector: 'app-home',
@@ -56,7 +56,8 @@ export class HomePage implements OnInit, OnDestroy {
   logoFileName: string | null = null;
   startX = 0;
   currentX = 0;
-
+  selectedTab: 'colores' | 'transparencia' | 'imagenes' | 'formas' = 'colores';
+  isSharing: boolean = false;
   
   constructor(
     private router: Router,
@@ -65,8 +66,6 @@ export class HomePage implements OnInit, OnDestroy {
     private loadingCtrl: LoadingController,
     private renderer: Renderer2
   ) { }
-
-
   ngOnInit() {
     this.qrCode = new QRCodeStyling({
       width: 300,
@@ -100,15 +99,14 @@ export class HomePage implements OnInit, OnDestroy {
       this.setupStatusBar();
     });
     
-    this.routerSubscription = this.router.events.pipe(
+     this.routerSubscription = this.router.events.pipe(
       filter((event) => event instanceof NavigationEnd)
     ).subscribe((event: NavigationEnd) => {
       if (event.urlAfterRedirects.includes('/home')) {
-        
+        showBannerMenu(BannerAdPosition.BOTTOM_CENTER);
       }
     });
   }
-
   async updateShape(shape: 'square' | 'rounded' | 'diagLeft' | 'diagRight') {
     this.currentShape = shape;
 
@@ -153,37 +151,17 @@ export class HomePage implements OnInit, OnDestroy {
       cornersDotOptions: { type: cornersDotType },
     });
   }
-
-  private withTimeout<T>(promise: Promise<T>, ms: number): Promise<T> {
-    return new Promise((resolve, reject) => {
-      const timeout = setTimeout(() => {
-        reject(new Error(`Timeout después de ${ms / 1000} segundos. Intente de nuevo.`));
-      }, ms);
-      promise
-        .then(result => {
-          clearTimeout(timeout);
-          resolve(result);
-        })
-        .catch(error => {
-          clearTimeout(timeout);
-          reject(error);
-        });
-    });
-  }
-
   setupStatusBar() {
     StatusBar.setStyle({ style: Style.Default });
     StatusBar.setOverlaysWebView({ overlay: true });
     StatusBar.setBackgroundColor({ color: '#00000000' });
   }
-
   ngOnDestroy(): void {
     if (this.animationId) cancelAnimationFrame(this.animationId);
     if (this.routerSubscription) {
       this.routerSubscription.unsubscribe();
     }
   }
-
   updateColorLight() {
     const alpha = Math.round((this.alphaLight / 100) * 255);
     const alphaHex = alpha.toString(16).padStart(2, '0').toUpperCase();
@@ -201,7 +179,6 @@ export class HomePage implements OnInit, OnDestroy {
       });
     }
   }
-
   async selectBackgroundImage() {
     try {
       const image = await Camera.getPhoto({
@@ -225,7 +202,6 @@ export class HomePage implements OnInit, OnDestroy {
       this.showToast('Error al cargar la imagen de fondo.', 'danger');
     }
   }
-
   removeBackgroundImage() {
     this.backgroundImage = null;
     this.fileName = null;
@@ -236,7 +212,6 @@ export class HomePage implements OnInit, OnDestroy {
 
     if (this.isQrCodeAppended) this.generateQR(true);
   }
-
   async pegarTexto() {
     try {
       let value = '';
@@ -263,7 +238,6 @@ export class HomePage implements OnInit, OnDestroy {
       });
     }
   }
-
   async copiarTexto() {
     this.errorClipboard = null;
     try {
@@ -278,8 +252,6 @@ export class HomePage implements OnInit, OnDestroy {
       this.errorClipboard = 'Error al copiar texto: ' + (err?.message || err);
     }
   }
-
-  
   async generateQR(isPreview: boolean = false) {
     this.updateColorLight();
 
@@ -366,7 +338,6 @@ export class HomePage implements OnInit, OnDestroy {
       throw new Error(userMessage);
     }
   }
-
   private async combineImageAndQR(qrCodeDataUrl: string, backgroundDataUrl: string): Promise<string> {
     return new Promise((resolve, reject) => {
       const canvas = document.createElement('canvas');
@@ -403,7 +374,6 @@ export class HomePage implements OnInit, OnDestroy {
       backgroundImage.onerror = () => reject('Error al cargar la imagen de fondo. Asegúrate de que sea un formato válido.');
     });
   }
-
   limpiarCampos() {
 
     this.logoFileName = null;
@@ -426,102 +396,60 @@ export class HomePage implements OnInit, OnDestroy {
       backgroundOptions: { color: this.colorLightHex }
     });
   }
-
-  
   async shareQR() {
-    this.errorGeneral = null;
-
-    
-    if (!this.qrData.trim().length) {
-      this.showToast('Primero escribe un texto o pega un enlace.', 'warning');
-      return;
-    }
-
-    
-    let generationSuccessful = !!this.qrImage; 
-
-    
-    if (!this.qrImage) {
-      const generationLoading = await this.loadingCtrl.create({
-        message: 'Generando imagen para compartir...',
-        spinner: 'dots'
-      });
-      await generationLoading.present();
-      
+      if (this.isSharing) {
+          console.warn("Compartir ya está en proceso, ignorando clic.");
+          return; 
+      }
+      if (!this.qrData.trim().length) {
+          this.showToast('Primero escribe un texto o pega un enlace.', 'warning');
+          return;
+      }
+      this.isSharing = true; 
       try {
-        
-        await this.generateQR(false); 
-        generationSuccessful = true; 
-      } catch (e: any) {
-        console.error('Error durante la generación de QR para compartir:', e);
-        
-        this.showToast(e.message || 'Error desconocido al generar el código QR.', 'danger');
-        generationSuccessful = false;
+          let qrDataUrl: string;
+          const canvas: any = await this.qrCode.getRawData('png');
+          const reader = new FileReader();
+          qrDataUrl = await new Promise<string>((resolve, reject) => {
+              reader.onloadend = () => resolve(reader.result as string);
+              reader.onerror = reject;
+              reader.readAsDataURL(canvas);
+          });
+          const base64 = qrDataUrl.split(',')[1];
+          const fileName = `qr-code-${Date.now()}.png`;
+          const savedFile = await Filesystem.writeFile({
+              path: fileName,
+              data: base64,
+              directory: Directory.Cache,
+          });
+          await showInterstitialAd(); 
+           const appLink = 'https://play.google.com/store/apps/details?id=com.neiruzlab.app';
+            const shareText = `QR generado por QR Creador. Descarga la app aquí: ${appLink}`;
+            await Share.share({
+                title: 'Mi Código QR',
+                text: shareText, 
+                url: savedFile.uri,
+                dialogTitle: 'Compartir código QR con…',
+            });
+      } catch (err: any) {
+          console.error('Error compartiendo QR:', err);
+          this.showToast('Error compartiendo QR.', 'danger');
       } finally {
-        await generationLoading.dismiss();
+          this.isSharing = false; 
       }
-
-      
-      if (!generationSuccessful) {
-        return;
-      }
-    }
-
-    
-    const loading = await this.loadingCtrl.create({
-      message: 'Preparando y compartiendo...',
-      spinner: 'dots',
-      cssClass: 'custom-loading-class'
-    });
-    await loading.present();
-
-    try {
-      const shareOperation = async () => {
-        
-        const base64 = this.qrImage!.split(',')[1];
-        const fileName = `qr-code-${Date.now()}.png`;
-        const savedFile = await Filesystem.writeFile({
-          path: fileName,
-          data: base64,
-          directory: Directory.Cache,
-        });
-        await Share.share({
-          title: 'Mi Código QR',
-          text: 'https://play.google.com/store/apps/details?id=com.neiruzlab.app QR generado por QR Creador...',
-          url: savedFile.uri,
-          dialogTitle: 'Compartir código QR con…',
-        });
-      };
-      await this.withTimeout(shareOperation(), 20000);
-      await loading.dismiss();
-    } catch (err: any) {
-      await loading.dismiss();
-      const errorMessage = err?.message || err;
-      if (errorMessage.includes('Timeout')) {
-        this.errorGeneral = 'La operación ha tardado demasiado. Por favor, inténtelo de nuevo.';
-        this.showToast('Tiempo agotado. Vuelva a intentar la operación.', 'danger');
-      } else {
-        this.errorGeneral = 'Error compartiendo QR: ' + errorMessage;
-        this.showToast('Error compartiendo QR.', 'danger');
-      }
-    }
   }
-
   goToMenu() {
     
     this.router.navigateByUrl('/menu');
   }
-
   goToGenerator() {
     
     this.router.navigateByUrl('/home');
   }
-
   goToScanner() {
     
     this.router.navigateByUrl('/scan');
   }
-
   async showToast(message: string, color: string = 'primary', duration: number = 3000) {
     const toast = await this.toastController.create({
       message,
@@ -537,8 +465,6 @@ export class HomePage implements OnInit, OnDestroy {
       toast.dismiss();
     });
   }
-
-
   animate() {
     if (!this.isPaused) {
       this.position -= this.speed;
@@ -550,32 +476,26 @@ export class HomePage implements OnInit, OnDestroy {
     }
     this.animationId = requestAnimationFrame(() => this.animate());
   }
-
   onTouchStart(event: TouchEvent) {
     this.isPaused = true;
     this.startX = event.touches[0].clientX;
   }
-
   onTouchMove(event: TouchEvent) {
     const moveX = event.touches[0].clientX - this.startX;
     this.carouselTransform = `translateX(${this.position + moveX}px)`;
   }
-
   onTouchEnd(event: TouchEvent) {
     const endX = event.changedTouches[0].clientX;
     const deltaX = endX - this.startX;
     this.position += deltaX * 0.8;
     this.isPaused = false;
   }
-
   onImageClick(img: string) {
     this.isPaused = !this.isPaused;
     this.backgroundImage = img;
     this.updateCanvasBackground();
     if (this.isQrCodeAppended) this.generateQR(true);
   }
-
-
   onImageSelected(event: any) {
     const file = event.target.files[0];
     if (file) {
@@ -589,7 +509,6 @@ export class HomePage implements OnInit, OnDestroy {
       reader.readAsDataURL(file);
     }
   }
-
   private updateCanvasBackground() {
     if (this.qrCanvas && this.qrCanvas.nativeElement) {
       const element = this.qrCanvas.nativeElement;
